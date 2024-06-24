@@ -1,0 +1,27 @@
+.open-link {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.open-link:hover {
+    background-color: #0056b3;
+}
+
+.copied {
+    color: green;
+    margin-left: 10px;
+    display: none; /* سيتم عرضها عند الضغط على الزر */
+}
+
+.open-link.clicked {
+    background-color: #28a745 !important;
+}
+
+.open-link.clicked:hover {
+    background-color: #218838 !important;
+}

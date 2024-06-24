@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Links Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0; /* لترك هوامش على اليمين واليسار */
+        }
+        header {
+            background-color: #4CAF50;
+            padding: 10px 0;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        header img {
+            height: 50px;
+            vertical-align: middle;
+        }
+        header nav {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        .container {
+            flex: 1;
+            padding: 20px;
+        }
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        #linksContainer {
+            margin-top: 20px;
+        }
+        .link-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* لتحقيق توزيع الزر بجانب الرابط */
+            margin-bottom: 10px;
+        }
+        .link-container a {
+            margin-right: 10px;
+        }
+        .open-link {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .open-link:hover {
+            background-color: #0056b3;
+        }
+        .copied {
+            color: green;
+            margin-left: 10px;
+        }
+    </style>
+    <script>
+        function createWhatsAppLinks() {
+            const phoneNumbersInput = document.getElementById("phoneNumbers").value;
+            const message = encodeURIComponent(document.getElementById("message").value);
+            const phoneNumbers = phoneNumbersInput.split("\n").map(number => {
+                return number.replace(/\s+/g, '').replace(/\+/g, ''); // إزالة الفراغات و +
+            });
+
+            const baseUrl = "https://api.whatsapp.com/send/?phone=";
+            const suffix = `&text=${message}&type=phone_number&app_absent=0`;
+            const linksContainer = document.getElementById("linksContainer");
+
+            linksContainer.innerHTML = ""; // لتفريغ الحاوية قبل الإضافة الجديدة
+
+            phoneNumbers.forEach(number => {
+                if (number) { // التأكد من أن الرقم ليس فارغًا
+                    const link = `${baseUrl}${number}${suffix}`;
+                    const linkContainer = document.createElement("div");
+                    linkContainer.className = "link-container";
+
+                    const linkElement = document.createElement("a");
+                    linkElement.href = link;
+                    linkElement.target = "_blank"; // لفتح الرابط في نافذة جديدة
+                    linkElement.textContent = `WhatsApp Link for ${number}`;
+
+                    const openLinkButton = document.createElement("button");
+                    openLinkButton.textContent = "Open Link";
+                    openLinkButton.className = "open-link";
+                    openLinkButton.onclick = function() {
+                        window.open(link, "_blank");
+                    };
+
+                    const copyButton = document.createElement("button");
+                    copyButton.textContent = "Copy Link";
+                    copyButton.onclick = function() {
+                        navigator.clipboard.writeText(link).then(() => {
+                            copyButton.textContent = "Copied!";
+                            copyButton.classList.add("copied");
+                            setTimeout(() => {
+                                copyButton.textContent = "Copy Link";
+                                copyButton.classList.remove("copied");
+                            }, 2000);
+                        });
+                    };
+
+                    linkContainer.appendChild(linkElement);
+                    linkContainer.appendChild(openLinkButton);
+                    linkContainer.appendChild(copyButton);
+                    linksContainer.appendChild(linkContainer); // لإضافة الفاصل بين الروابط
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Logo">
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>WhatsApp Links Generator</h1>
+        <label for="phoneNumbers">Enter phone numbers separated by new lines:</label><br>
+        <textarea id="phoneNumbers" rows="10" cols="50"></textarea><br><br>
+        <label for="message">Enter your message:</label><br>
+        <textarea id="message" rows="4" cols="50"></textarea><br><br>
+        <button onclick="createWhatsAppLinks()">Generate Links</button>
+        <div id="linksContainer"></div>
+    </div>
+    <footer>
+        &copy; 2024 WhatsApp Links Generator. All rights reserved.
+    </footer>
+    <script src="js/script.js"></script>
+</body>
+</html>
