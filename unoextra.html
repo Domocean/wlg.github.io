@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uno mp3</title>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f7f7f7;
+        font-family: Arial, sans-serif;
+    }
+    .title {
+        font-size: 48px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        animation: colorChange 5s infinite;
+    }
+    @keyframes colorChange {
+        0% { color: red; }
+        25% { color: blue; }
+        50% { color: green; }
+        75% { color: yellow; }
+        100% { color: red; }
+    }
+    button {
+        padding: 20px 40px;
+        font-size: 50px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    img {
+        margin-top: 20px;
+        cursor: pointer;
+        width: 350px; /* Adjust the size as needed */
+        height: auto;
+        animation: vibrate 0.05s linear;
+        animation-iteration-count: infinite;
+        animation-play-state: paused; /* إضافة هذا السطر لإبقاء الحركة متوقفة بشكل افتراضي */
+    }
+    @keyframes vibrate {
+        0% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(-2px, -2px); }
+        60% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+        100% { transform: translate(0); }
+    }
+    @media (max-width: 768px) {
+        .title {
+            font-size: 25px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 100px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="title">🐐 أولاد بومعيز للسياحة والترفيه🐐</div>
+<button onclick="playSound('unoSound')">Uno أونوو</button>
+<audio id="unoSound" src="https://e.top4top.io/m_3024z7uaf0.mp3"></audio>
+<img src="https://g.top4top.io/p_3024bjrkj2.jpg" onclick="playSound('anotherSound')" />
+<audio id="anotherSound" src="https://i.top4top.io/m_3024yk5i20.m4a"></audio>
+<script>
+function playSound(soundId) {
+    var sound = document.getElementById(soundId);
+    sound.play();
+    if (soundId === 'anotherSound') {
+        changeBackgroundColor(soundId);
+        vibrateImage();
+    }
+}
+
+function changeBackgroundColor(soundId) {
+    var colors = ['red', 'blue', 'green', 'yellow'];
+    var i = 0;
+    var intervalId = setInterval(function() {
+        document.body.style.backgroundColor = colors[i++];
+        if (i >= colors.length) i = 0;
+    }, 1000); // تغيير اللون كل ثانية
+
+    // إيقاف تغيير اللون عند انتهاء المقطع الصوتي
+    document.getElementById(soundId).onended = function() {
+        clearInterval(intervalId);
+        document.body.style.backgroundColor = ''; // إعادة اللون الأصلي للخلفية
+    };
+}
+
+function vibrateImage() {
+    var img = document.querySelector('img');
+    img.style.animationPlayState = 'running';
+    setTimeout(function() {
+        img.style.animationPlayState = 'paused';
+    }, 15000); // إيقاف الاهتزاز بعد 15 ثانية
+}
+</script>
+</body>
+</html>
