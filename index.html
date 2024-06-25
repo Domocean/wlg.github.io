@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp Links Generator</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="path/to/your/icon.png" type="image/png"> <!-- Replace with your icon path -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,7 +14,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            margin: 0; /* لترك هوامش على اليمين واليسار */
+            margin: 0;
         }
         header {
             background-color: #4CAF50;
@@ -61,7 +62,7 @@
         .link-container {
             display: flex;
             align-items: center;
-            justify-content: space-between; /* لتحقيق توزيع الزر بجانب الرابط */
+            justify-content: space-between;
             margin-bottom: 10px;
         }
         .link-container a {
@@ -88,24 +89,24 @@
             const phoneNumbersInput = document.getElementById("phoneNumbers").value;
             const message = encodeURIComponent(document.getElementById("message").value);
             const phoneNumbers = phoneNumbersInput.split("\n").map(number => {
-                return number.replace(/\s+/g, '').replace(/\+/g, ''); // إزالة الفراغات و +
+                return number.replace(/\s+/g, '').replace(/\+/g, ''); // Remove spaces and +
             });
 
             const baseUrl = "https://api.whatsapp.com/send/?phone=";
             const suffix = `&text=${message}&type=phone_number&app_absent=0`;
             const linksContainer = document.getElementById("linksContainer");
 
-            linksContainer.innerHTML = ""; // لتفريغ الحاوية قبل الإضافة الجديدة
+            linksContainer.innerHTML = "";
 
             phoneNumbers.forEach(number => {
-                if (number) { // التأكد من أن الرقم ليس فارغًا
+                if (number) {
                     const link = `${baseUrl}${number}${suffix}`;
                     const linkContainer = document.createElement("div");
                     linkContainer.className = "link-container";
 
                     const linkElement = document.createElement("a");
                     linkElement.href = link;
-                    linkElement.target = "_blank"; // لفتح الرابط في نافذة جديدة
+                    linkElement.target = "_blank";
                     linkElement.textContent = `WhatsApp Link for ${number}`;
 
                     const openLinkButton = document.createElement("button");
@@ -131,9 +132,14 @@
                     linkContainer.appendChild(linkElement);
                     linkContainer.appendChild(openLinkButton);
                     linkContainer.appendChild(copyButton);
-                    linksContainer.appendChild(linkContainer); // لإضافة الفاصل بين الروابط
+                    linksContainer.appendChild(linkContainer);
                 }
             });
+        }
+
+        function validatePhoneNumbers(event) {
+            const input = event.target.value;
+            event.target.value = input.replace(/[^+\d\n]/g, ''); // Allow only numbers and +
         }
     </script>
 </head>
@@ -149,7 +155,7 @@
     <div class="container">
         <h1>WhatsApp Links Generator</h1>
         <label for="phoneNumbers">Enter phone numbers separated by new lines:</label><br>
-        <textarea id="phoneNumbers" rows="10" cols="50"></textarea><br><br>
+        <textarea id="phoneNumbers" rows="10" cols="50" oninput="validatePhoneNumbers(event)"></textarea><br><br>
         <label for="message">Enter your message:</label><br>
         <textarea id="message" rows="4" cols="50"></textarea><br><br>
         <button onclick="createWhatsAppLinks()">Generate Links</button>
