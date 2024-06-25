@@ -3,105 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Contact Us - HelpWin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="https://www.helpwin.net/helpwin.svg" type="image/png">
     <style>
-        /* Reset CSS */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Basic styling */
+        /* Additional CSS styles can be added here for further customization */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
-
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 600px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .contact-form {
-            display: grid;
-            gap: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        .form-group input[type="submit"] {
-            background-color: #007bff;
+        header {
+            background-color: #333;
             color: #fff;
-            border: none;
-            padding: 12px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
+            padding: 10px 0;
+            text-align: center;
         }
-
-        .form-group input[type="submit"]:hover {
-            background-color: #0056b3;
+        header img {
+            width: 120px;
+            height: auto;
+        }
+        nav {
+            margin-top: 10px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        section {
+            padding: 20px;
+            background-color: #fff;
+            margin: 20px auto;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #333;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
+    <header>
+        <img src="https://www.helpwin.net/helpwin.svg" alt="HelpWin">
+        <nav>
+            <a href="https://www.helpwin.net">Home</a>
+            <a href="#about">About</a>
+            <a href="https://www.helpwin.net/contact">Contact</a>
+        </nav>
+    </header>
+    <section id="contact-info">
+        <h2>Contact Information</h2>
+        <p>Email: <a href="mailto:contact@helpwin.net">contact@helpwin.net</a></p>
+        <p>Phone: <a href="tel:+1234567890">+1234567890</a></p>
+        <p>Address: 123 Street, City, Country</p>
+    </section>
     <div class="container">
-        <h1>Contact Us</h1>
-        <form class="contact-form" action="#" method="POST">
-            <div class="form-group">
-                <label for="name">Your Name:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Your Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="message">Your Message:</label>
-                <textarea id="message" name="message" required></textarea>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Send Message">
-            </div>
-        </form>
+        <h1>WhatsApp Links Generator</h1>
+        <label for="phoneNumbers">Enter phone numbers separated by new lines:</label><br>
+        <textarea id="phoneNumbers" rows="10" cols="50" oninput="validatePhoneNumbers(event)"></textarea><br><br>
+        <label for="message">Enter your message:</label><br>
+        <textarea id="message" rows="4" cols="50"></textarea><br><br>
+        <button onclick="createWhatsAppLinks()">Generate Links</button>
+        <div id="linksContainer"></div>
     </div>
+    <footer>
+        &copy; 2024 WhatsApp Links Generator. All rights reserved.
+    </footer>
+    <script src="js/script.js"></script>
 </body>
 </html>
-
