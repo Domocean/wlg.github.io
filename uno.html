@@ -146,6 +146,11 @@
             display: block;
             margin: 0 auto;
         }
+        .vibrating-image {
+            animation: vibrate 0.05s linear infinite;
+            animation-iteration-count: infinite;
+            animation-play-state: paused;
+        }
         @keyframes vibrate {
             0% { transform: translate(0); }
             20% { transform: translate(-2px, 2px); }
@@ -261,7 +266,7 @@
                 <div style="text-align: center;">
                     <button class="bubbly-button" onclick="playSound('unoSound')">UNO Sound</button>
                     <audio id="unoSound" src="https://www.helpwin.net/extra.mp3"></audio>
-                    <img src="https://www.helpwin.net/uno.jpg" onclick="playSound('anotherSound')" />
+                    <img src="https://www.helpwin.net/uno.jpg" class="vibrating-image" onclick="playSound('anotherSound')" />
                     <audio id="anotherSound" src="https://www.helpwin.net/chofoni.mp3"></audio>
                 </div>
             </div>
@@ -298,7 +303,7 @@
         }
 
         function vibrateImage() {
-            var img = document.querySelector('img');
+            var img = document.querySelector('.vibrating-image');
             img.style.animationPlayState = 'running';
             setTimeout(function() {
                 img.style.animationPlayState = 'paused';
