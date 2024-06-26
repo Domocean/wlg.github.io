@@ -79,9 +79,21 @@
         .open-link:hover {
             background-color: #0056b3;
         }
+        .open-link.clicked {
+            background-color: #28a745;
+        }
         .copied {
             color: green;
             margin-left: 10px;
+        }
+        .checkmark {
+            display: none;
+            color: green;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+        .checkmark.visible {
+            display: inline;
         }
     </style>
     <script>
@@ -107,12 +119,19 @@
                     linkElement.href = link;
                     linkElement.target = "_blank";
                     linkElement.textContent = `Email Link for ${email}`;
+                    linkElement.onclick = function() {
+                        const checkmark = this.parentElement.querySelector(".checkmark");
+                        checkmark.classList.add("visible");
+                    };
 
                     const openLinkButton = document.createElement("button");
                     openLinkButton.textContent = "Open Link";
                     openLinkButton.className = "open-link";
                     openLinkButton.onclick = function() {
                         window.open(link, "_blank");
+                        openLinkButton.classList.add("clicked");
+                        const checkmark = this.parentElement.querySelector(".checkmark");
+                        checkmark.classList.add("visible");
                     };
 
                     const copyButton = document.createElement("button");
@@ -121,6 +140,8 @@
                         navigator.clipboard.writeText(link).then(() => {
                             copyButton.textContent = "Copied!";
                             copyButton.classList.add("copied");
+                            const checkmark = this.parentElement.querySelector(".checkmark");
+                            checkmark.classList.add("visible");
                             setTimeout(() => {
                                 copyButton.textContent = "Copy Link";
                                 copyButton.classList.remove("copied");
@@ -128,9 +149,14 @@
                         });
                     };
 
+                    const checkmark = document.createElement("span");
+                    checkmark.className = "checkmark";
+                    checkmark.innerHTML = "&#10004;";
+
                     linkContainer.appendChild(linkElement);
                     linkContainer.appendChild(openLinkButton);
                     linkContainer.appendChild(copyButton);
+                    linkContainer.appendChild(checkmark);
                     linksContainer.appendChild(linkContainer);
                 }
             });
