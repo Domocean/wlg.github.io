@@ -3,25 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Links Generator</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="icon" href="https://www.helpwin.net/helpwin.svg" type="image/png"> <!-- Replace with your icon path -->
+    <title>Referral Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             padding: 0;
-            background-color: #f0f2f5;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
             margin: 0;
+            background-color: #f0f2f5;
         }
         header {
             background-color: #4CAF50;
-            padding: 10px 0;
             color: white;
+            padding: 10px 0;
             text-align: center;
-            position: relative;
         }
         header img {
             height: 50px;
@@ -38,136 +32,59 @@
             font-size: 18px;
         }
         .container {
-            flex: 1;
             padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto; /* Center the container */
+        }
+        .boxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .box {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .box:hover {
+            transform: translateY(-5px);
+        }
+        .box img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .box h2 {
+            cursor: pointer;
         }
         footer {
             background-color: #4CAF50;
             color: white;
             text-align: center;
             padding: 10px 0;
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
-        textarea, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-        }
-        #linksContainer {
             margin-top: 20px;
         }
-        .link-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .boxes {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
-        .link-container a {
-            margin-right: 10px;
-        }
-        .open-link {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .open-link:hover {
-            background-color: #0056b3;
-        }
-        .open-link.clicked {
-            background-color: #28a745;
-        }
-        .copied {
-            color: green;
-            margin-left: 10px;
-        }
-        .checkmark {
-            display: none;
-            color: green;
-            font-size: 18px;
-            margin-left: 10px;
-        }
-        .checkmark.visible {
-            display: inline;
+
+        @media (max-width: 480px) {
+            .boxes {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-    <script>
-        function createWhatsAppLinks() {
-            const phoneNumbersInput = document.getElementById("phoneNumbers").value;
-            const message = encodeURIComponent(document.getElementById("message").value);
-            const phoneNumbers = phoneNumbersInput.split("\n").map(number => {
-                return number.replace(/\s+/g, '').replace(/\+/g, ''); // Remove spaces and +
-            });
-
-            const baseUrl = "https://api.whatsapp.com/send/?phone=";
-            const suffix = `&text=${message}&type=phone_number&app_absent=0`;
-            const linksContainer = document.getElementById("linksContainer");
-
-            linksContainer.innerHTML = "";
-
-            phoneNumbers.forEach(number => {
-                if (number) {
-                    const link = `${baseUrl}${number}${suffix}`;
-                    const linkContainer = document.createElement("div");
-                    linkContainer.className = "link-container";
-
-                    const linkElement = document.createElement("a");
-                    linkElement.href = link;
-                    linkElement.target = "_blank";
-                    linkElement.textContent = `WhatsApp Link for ${number}`;
-                    linkElement.onclick = function() {
-                        const checkmark = this.parentElement.querySelector(".checkmark");
-                        checkmark.classList.add("visible");
-                    };
-
-                    const openLinkButton = document.createElement("button");
-                    openLinkButton.textContent = "Open Link";
-                    openLinkButton.className = "open-link";
-                    openLinkButton.onclick = function() {
-                        window.open(link, "_blank");
-                        openLinkButton.classList.add("clicked");
-                        const checkmark = this.parentElement.querySelector(".checkmark");
-                        checkmark.classList.add("visible");
-                    };
-
-                    const copyButton = document.createElement("button");
-                    copyButton.textContent = "Copy Link";
-                    copyButton.onclick = function() {
-                        navigator.clipboard.writeText(link).then(() => {
-                            copyButton.textContent = "Copied!";
-                            copyButton.classList.add("copied");
-                            const checkmark = this.parentElement.querySelector(".checkmark");
-                            checkmark.classList.add("visible");
-                            setTimeout(() => {
-                                copyButton.textContent = "Copy Link";
-                                copyButton.classList.remove("copied");
-                            }, 2000);
-                        });
-                    };
-
-                    const checkmark = document.createElement("span");
-                    checkmark.className = "checkmark";
-                    checkmark.innerHTML = "&#10004;";
-
-                    linkContainer.appendChild(linkElement);
-                    linkContainer.appendChild(openLinkButton);
-                    linkContainer.appendChild(copyButton);
-                    linkContainer.appendChild(checkmark);
-                    linksContainer.appendChild(linkContainer);
-                }
-            });
-        }
-
-        function validatePhoneNumbers(event) {
-            const input = event.target.value;
-            event.target.value = input.replace(/[^+\d\n]/g, ''); // Allow only numbers and +
-        }
-    </script>
 </head>
 <body>
     <header>
@@ -179,17 +96,69 @@
         </nav>
     </header>
     <div class="container">
-        <h1>WhatsApp Links Generator</h1>
-        <label for="phoneNumbers">Enter phone numbers separated by new lines:</label><br>
-        <textarea id="phoneNumbers" rows="10" cols="50" oninput="validatePhoneNumbers(event)"></textarea><br><br>
-        <label for="message">Enter your message:</label><br>
-        <textarea id="message" rows="4" cols="50"></textarea><br><br>
-        <button onclick="createWhatsAppLinks()">Generate Links</button>
-        <div id="linksContainer"></div>
+        <h1>Referral Page</h1>
+        <p>Here are some referral options:</p>
+        <div class="boxes">
+            <div class="box">
+                <a href="https://www.example.com/referral1" target="_blank">
+                    <img src="https://via.placeholder.com/150" alt="Referral 1">
+                    <h2>Referral 1</h2>
+                </a>
+                <p>Description of Referral 1</p>
+            </div>
+            <div class="box">
+                <a href="https://www.example.com/referral2" target="_blank">
+                    <img src="https://via.placeholder.com/150" alt="Referral 2">
+                    <h2>Referral 2</h2>
+                </a>
+                <p>Description of Referral 2</p>
+            </div>
+            <div class="box">
+                <a href="https://www.example.com/referral3" target="_blank">
+                    <img src="https://via.placeholder.com/150" alt="Referral 3">
+                    <h2>Referral 3</h2>
+                </a>
+                <p>Description of Referral 3</p>
+            </div>
+            <div class="box">
+                <a href="https://www.example.com/referral4" target="_blank">
+                    <img src="https://via.placeholder.com/150" alt="Referral 4">
+                    <h2>Referral 4</h2>
+                </a>
+                <p>Description of Referral 4</p>
+            </div>
+            <div class="box">
+                <a href="https://www.example.com/referral5" target="_blank">
+                    <img src="https://via.placeholder.com/150" alt="Referral 5">
+                    <h2>Referral 5</h2>
+                </a>
+                <p>Description of Referral 5</p>
+            </div>
+            <div class="box">
+                <a href="https://www.example.com/referral6" target="_blank">
+                    <img src="https://via.placeholder.com/150" alt="Referral 6">
+                    <h2>Referral 6</h2>
+                </a>
+                <p>Description of Referral 6</p>
+            </div>
+            <div class="box">
+                <a href="https://www.example.com/referral7" target="_blank">
+                    <img src="https://via.placeholder.com/150" alt="Referral 7">
+                    <h2>Referral 7</h2>
+                </a>
+                <p>Description of Referral 7</p>
+            </div>
+            <div class="box">
+                <a href="https://www.example.com/referral8" target="_blank">
+                    <img src="https://via.placeholder.com/150" alt="Referral 8">
+                    <h2>Referral 8</h2>
+                </a>
+                <p>Description of Referral 8</p>
+            </div>
+        </div>
     </div>
     <footer>
-        &copy; 2024 WhatsApp Links Generator. All rights reserved.
+        &copy; 2024 Referral Page. All rights reserved.
     </footer>
-    <script src="js/script.js"></script>
 </body>
 </html>
