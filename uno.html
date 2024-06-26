@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpWin Uno Sound Button</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        header img {
+            height: 50px;
+            vertical-align: middle;
+        }
+        header nav {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto; /* Center the container */
+        }
+        .boxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .box {
+            flex: 1 1 300px; /* Minimum width of 300px, can grow */
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .box:hover {
+            transform: translateY(-5px);
+        }
+        .box img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .box h2 {
+            cursor: pointer;
+        }
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+
+        /* Styles for the game and sound buttons */
+        .game-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .circle {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            flex-wrap: wrap;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 2s ease;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+        .color {
+            width: 50%;
+            height: 50%;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        .color.active {
+            transform: scale(1.5);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+        .green {
+            background-color: green;
+        }
+        .blue {
+            background-color: blue;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+        .red {
+            background-color: red;
+        }
+        button {
+            padding: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: #18181A;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            transition: background-color 0.3s;
+            width: 100%;
+            max-width: 350px;
+            box-sizing: border-box;
+            height: 100px;
+            margin: 10px auto;
+        }
+        button:hover {
+            background-color: #03151E;
+        }
+        img {
+            margin-top: 20px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            animation: vibrate 0.05s linear infinite;
+            animation-iteration-count: infinite;
+            animation-play-state: paused;
+            display: block;
+            margin: 0 auto;
+        }
+        @keyframes vibrate {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        @media (max-width: 768px) {
+            button {
+                padding: 30px 30px;
+                font-size: 50px;
+                width: 100%;
+                height: 200px;
+            }
+        }
+        @keyframes topBubbles {
+            0% {
+                background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
+            }
+            50% {
+                background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
+            }
+            100% {
+                background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
+                background-size: 0% 0%, 0% 0%,  0% 0%,  0% 0%,  0% 0%,  0% 0%;
+            }
+        }
+        @keyframes bottomBubbles {
+            0% {
+                background-position: 0% 100%, 0% 30%, 10% 50%, 20% 20%, 30% 40%, 22% 60%, 50% 60%, 65% 30%, 90% 40%;
+            }
+            50% {
+                background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
+            }
+            100% {
+                background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
+                background-size: 0% 0%, 0% 0%,  0% 0%,  0% 0%,  0% 0%,  0% 0%;
+            }
+        }
+        .bubbly-button {
+            animation: topBubbles 2s linear infinite, bottomBubbles 2s linear infinite;
+            margin: 10px auto;
+            display: block;
+        }
+        @keyframes colorAnimation {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://www.helpwin.net/helpwin.svg" alt="HelpWin">
+        <nav>
+            <a href="https://www.helpwin.net">Home</a>
+            <a href="#about">About</a>
+            <a href="https://www.helpwin.net/contact">Contact</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="boxes">
+            <div class="box">
+            
+                <div class="game-container">
+                    <div class="circle" id="colorCircle">
+                        <div class="color green"></div>
+                        <div class="color blue"></div>
+                        <div class="color yellow"></div>
+                        <div class="color red"></div>
+                        <button id="randomColorButton">Choose a color</button>
+                    </div>
+
+                    <audio id="colorSound">
+                        <source src="https://www.helpwin.net/cr.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+
+                    <script>
+                        document.getElementById('colorCircle').addEventListener('click', function() {
+                            const circle = document.getElementById('colorCircle');
+                            const colors = ['green', 'blue', 'yellow', 'red'];
+                            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                            
+                            // Remove active class from all color elements
+                            const colorElements = document.querySelectorAll('.color');
+                            colorElements.forEach(element => {
+                                element.classList.remove('active');
+                            });
+
+                            // Play sound effect
+                            const sound = document.getElementById('colorSound');
+                            sound.currentTime = 0; // Rewind to start
+                            sound.play();
+
+                            // Add spinning class to circle
+                            circle.style.transform = 'rotate(720deg)';
+
+                            // After the spinning animation, set the active color
+                            setTimeout(() => {
+                                circle.style.transform = 'none';
+                                colorElements.forEach(element => {
+                                    if (element.classList.contains(randomColor)) {
+                                        element.classList.add('active');
+                                    }
+                                });
+                            }, 2000); // match the duration of the spinning animation (2 seconds)
+                        });
+                    </script>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="bubbly-button" onclick="playSound('unoSound')">UNO Sound</button>
+                    <audio id="unoSound" src="https://www.helpwin.net/extra.mp3"></audio>
+                    <img src="https://www.helpwin.net/uno.jpg" onclick="playSound('anotherSound')" />
+                    <audio id="anotherSound" src="https://www.helpwin.net/chofoni.mp3"></audio>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+    <footer>
+        &copy; 2024 Referral Page. All rights reserved.
+    </footer>
+
+    <script>
+        function playSound(soundId) {
+            var sound = document.getElementById(soundId);
+            sound.play();
+            if (soundId === 'anotherSound') {
+                changeBackgroundColor(soundId);
+                vibrateImage();
+            }
+        }
+
+        function changeBackgroundColor(soundId) {
+            var colors = ['red', 'blue', 'green', 'yellow'];
+            var i = 0;
+            var intervalId = setInterval(function() {
+                document.body.style.backgroundColor = colors[i++];
+                if (i >= colors.length) i = 0;
+            }, 1000); // change color every second
+
+            // Stop changing color when sound ends
+            document.getElementById(soundId).onended = function() {
+                clearInterval(intervalId);
+                document.body.style.backgroundColor = ''; // reset background color
+            };
+        }
+
+        function vibrateImage() {
+            var img = document.querySelector('img');
+            img.style.animationPlayState = 'running';
+            setTimeout(function() {
+                img.style.animationPlayState = 'paused';
+            }, 8000); // stop vibration after 8 seconds
+        }
+
+        var bubblyButtons = document.getElementsByClassName("bubbly-button");
+        for (var i = 0; i < bubblyButtons.length; i++) {
+            bubblyButtons[i].addEventListener('click', function(e) {
+                e.preventDefault();
+                // Reset animation
+                e.target.classList.remove('animate');
+                
+                e.target.classList.add('animate');
+                setTimeout(function(){
+                    e.target.classList.remove('animate');
+                },700);
+            }, false);
+        }
+    </script>
+</body>
+</html>
