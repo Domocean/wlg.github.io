@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             margin: 0;
         }
         .container {
@@ -21,15 +23,12 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 100%;
         }
         .form-group {
             margin-bottom: 20px;
         }
         #qrCode {
-            max-width: 100%;
-            height: auto;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -40,21 +39,19 @@
             <input type="text" id="text" class="form-control" placeholder="Enter text or URL">
         </div>
         <button onclick="generateQRCode()" class="btn btn-primary">Generate QR Code</button>
-        <div id="qrCodeContainer" class="mt-4">
-            <canvas id="qrCode"></canvas>
-        </div>
+        <div id="qrCode"></div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
     <script>
-        const qrCode = new QRCode(document.getElementById("qrCode"), {
-            width: 200,
-            height: 200
-        });
-
         function generateQRCode() {
             const text = document.getElementById("text").value;
-            qrCode.clear(); // Clear existing QR Code
-            qrCode.makeCode(text); // Generate new QR Code
+            const qrCodeContainer = document.getElementById("qrCode");
+            qrCodeContainer.innerHTML = '';
+            const canvas = document.createElement('canvas');
+            qrCodeContainer.appendChild(canvas);
+            QRCode.toCanvas(canvas, text, function (error) {
+                if (error) console.error(error);
+                console.log('QR Code generated successfully!');
+            });
         }
     </script>
 </body>
