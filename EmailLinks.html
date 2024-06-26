@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Links Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="https://www.helpwin.net/helpwin.svg" type="image/png"> <!-- Replace with your icon path -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            padding: 10px 0;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        header img {
+            height: 50px;
+            vertical-align: middle;
+        }
+        header nav {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        .container {
+            flex: 1;
+            padding: 20px;
+        }
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        #linksContainer {
+            margin-top: 20px;
+        }
+        .link-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .link-container a {
+            margin-right: 10px;
+        }
+        .open-link {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .open-link:hover {
+            background-color: #0056b3;
+        }
+        .copied {
+            color: green;
+            margin-left: 10px;
+        }
+    </style>
+    <script>
+        function createEmailLinks() {
+            const emailAddressesInput = document.getElementById("emailAddresses").value;
+            const subject = encodeURIComponent(document.getElementById("subject").value);
+            const body = encodeURIComponent(document.getElementById("body").value);
+            const emailAddresses = emailAddressesInput.split("\n").map(email => {
+                return email.trim();
+            });
+
+            const linksContainer = document.getElementById("linksContainer");
+
+            linksContainer.innerHTML = "";
+
+            emailAddresses.forEach(email => {
+                if (email) {
+                    const link = `mailto:${email}?subject=${subject}&body=${body}`;
+                    const linkContainer = document.createElement("div");
+                    linkContainer.className = "link-container";
+
+                    const linkElement = document.createElement("a");
+                    linkElement.href = link;
+                    linkElement.target = "_blank";
+                    linkElement.textContent = `Email Link for ${email}`;
+
+                    const openLinkButton = document.createElement("button");
+                    openLinkButton.textContent = "Open Link";
+                    openLinkButton.className = "open-link";
+                    openLinkButton.onclick = function() {
+                        window.open(link, "_blank");
+                    };
+
+                    const copyButton = document.createElement("button");
+                    copyButton.textContent = "Copy Link";
+                    copyButton.onclick = function() {
+                        navigator.clipboard.writeText(link).then(() => {
+                            copyButton.textContent = "Copied!";
+                            copyButton.classList.add("copied");
+                            setTimeout(() => {
+                                copyButton.textContent = "Copy Link";
+                                copyButton.classList.remove("copied");
+                            }, 2000);
+                        });
+                    };
+
+                    linkContainer.appendChild(linkElement);
+                    linkContainer.appendChild(openLinkButton);
+                    linkContainer.appendChild(copyButton);
+                    linksContainer.appendChild(linkContainer);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <img src="https://www.helpwin.net/helpwin.svg" alt="HelpWin">
+        <nav>
+            <a href="https://www.helpwin.net">Home</a>
+            <a href="#about">About</a>
+            <a href="https://www.helpwin.net/contact">Contact</a>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>Email Links Generator</h1>
+        <label for="emailAddresses">Enter email addresses separated by new lines:</label><br>
+        <textarea id="emailAddresses" rows="10" cols="50"></textarea><br><br>
+        <label for="subject">Enter email subject:</label><br>
+        <textarea id="subject" rows="2" cols="50"></textarea><br><br>
+        <label for="body">Enter email body:</label><br>
+        <textarea id="body" rows="4" cols="50"></textarea><br><br>
+        <button onclick="createEmailLinks()">Generate Links</button>
+        <div id="linksContainer"></div>
+    </div>
+    <footer>
+        &copy; 2024 Email Links Generator. All rights reserved.
+    </footer>
+</body>
+</html>
