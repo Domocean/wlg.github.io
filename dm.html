@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Website Links</title>
+	 <link rel="icon" href="https://www.helpwin.net/helpwin.svg" type="image/png"> 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            padding: 10px 0;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            width: 100%;
+        }
+        textarea, button {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        #linksContainer {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        .link-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .open-link, .copy-link {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+        }
+        .open-link:hover, .copy-link:hover {
+            background-color: #0056b3;
+        }
+        .open-link.clicked {
+            background-color: #28a745;
+        }
+        .copy-link {
+            background-color: #062453; /* Red color for copy button */
+        }
+        .copy-link:hover {
+            background-color: #103e86; /* Darker red on hover */
+        }
+        .checkmark {
+            display: none;
+            color: green;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+        .checkmark.visible {
+            display: inline;
+        }
+    </style>
+    <script>
+        function checkWebsiteStatus(url) {
+            return fetch(url, { method: 'HEAD' })
+                .then(response => response.ok)
+                .catch(() => false);
+        }
+
+        function createWebsiteLinks() {
+            const websitesInput = document.getElementById("websites").value;
+            const websites = websitesInput.split("\n").map(site => site.trim());
+
+            const linksContainer = document.getElementById("linksContainer");
+            linksContainer.innerHTML = "";
+
+            websites.forEach(website => {
+                if (website) {
+                    const linkContainer = document.createElement("div");
+                    linkContainer.className = "link-container";
+
+                    const linkElement = document.createElement("span");
+                    const domain = new URL(website).hostname;
+                    linkElement.textContent = domain;
+
+                    const openLinkButton = document.createElement("button");
+                    openLinkButton.textContent = "Open";
+                    openLinkButton.className = "open-link";
+                    openLinkButton.onclick = function() {
+                        window.open(website, "_blank");
+                        openLinkButton.classList.add("clicked");
+                        const checkmark = this.parentElement.querySelector(".checkmark");
+                        checkmark.classList.add("visible");
+                    };
+
+                    const copyLinkButton = document.createElement("button");
+                    copyLinkButton.textContent = "Copy";
+                    copyLinkButton.className = "copy-link";
+                    copyLinkButton.onclick = function() {
+                        navigator.clipboard.writeText(website).then(function() {
+                            const copyAlert = document.createElement("div");
+                            copyAlert.textContent = "Copied: " + website;
+                            copyAlert.style.position = "fixed";
+                            copyAlert.style.top = "10px";
+                            copyAlert.style.right = "10px";
+                            copyAlert.style.padding = "10px";
+                            copyAlert.style.backgroundColor = "#007bff";
+                            copyAlert.style.color = "white";
+                            copyAlert.style.borderRadius = "5px";
+                            document.body.appendChild(copyAlert);
+                            setTimeout(function() {
+                                copyAlert.remove();
+                            }, 2000);
+                        }, function() {
+                            alert("Copy failed.");
+                        });
+                    };
+
+                    const checkmark = document.createElement("span");
+                    checkmark.className = "checkmark";
+                    checkmark.innerHTML = "&#10004;";
+
+                    checkWebsiteStatus(website).then(isReachable => {
+                        if (isReachable) {
+                            checkmark.classList.add("visible");
+                        }
+                    });
+
+                    linkContainer.appendChild(linkElement);
+                    linkContainer.appendChild(openLinkButton);
+                    linkContainer.appendChild(copyLinkButton);
+                    linkContainer.appendChild(checkmark);
+                    linksContainer.appendChild(linkContainer);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Create Website Links</h1>
+    </header>
+    <div class="container">
+        <label for="websites">Enter websites (one per line):</label><br>
+        <textarea id="websites" rows="10"></textarea><br><br>
+        <button onclick="createWebsiteLinks()">Generate Links</button>
+        <div id="linksContainer"></div>
+    </div>
+    <footer>
+        &copy; 2024 Website Checker. All rights reserved.
+    </footer>
+</body>
+</html>
