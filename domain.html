@@ -24,6 +24,10 @@
             text-align: center;
             position: relative;
         }
+        header a {
+            text-decoration: none;
+            color: white;
+        }
         header img {
             height: 50px;
             vertical-align: middle;
@@ -106,21 +110,14 @@
         .search-button:hover {
             background-color: #0056b3;
         }
-        footer {
-            background-color: #007bff;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
     </style>
 </head>
 <body>
     <header>
-        <img src="logo.png" alt="Logo">
-        <h1>Domain List</h1>
+        <a href="domain.html">
+            <img src="logo.png" alt="Logo">
+            <h1>Domain List</h1>
+        </a>
     </header>
     <div class="container">
         <div class="search-container">
@@ -144,9 +141,6 @@
             <!-- Pagination buttons will be added by JavaScript -->
         </div>
     </div>
-    <footer>
-        &copy; 2024 Domain List. All rights reserved.
-    </footer>
     <script>
         const itemsPerPage = 50;
         let currentPage = 1;
