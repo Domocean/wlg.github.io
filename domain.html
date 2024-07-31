@@ -153,7 +153,7 @@
                     <th>Number</th>
                     <th>Domain Name</th>
                     <th id="priceHeader">Domain Price</th>
-                    <th>Purchase Link</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -186,7 +186,7 @@
                     <td>${start + index + 1}</td>
                     <td>${domain.name}</td>
                     <td>${domain.price}</td>
-                    <td><a href="${domain.link}" class="button" target="_blank">Buy</a></td>
+                    <td><button class="button" onclick="openDomain('${domain.name}')">Open</button></td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -225,6 +225,11 @@
             });
             sortAscending = !sortAscending;
             renderTable(currentPage);
+        }
+
+        function openDomain(domainName) {
+            const url = `https://${domainName}`;
+            window.open(url, '_blank');
         }
 
         document.getElementById('searchButton').addEventListener('click', () => {
