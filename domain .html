@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .pagination a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 0 5px;
+            font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Domain List</h1>
+        <table id="domainTable">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Domain Name</th>
+                    <th>Domain Price</th>
+                    <th>Purchase Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be added by JavaScript -->
+            </tbody>
+        </table>
+        <div class="pagination" id="pagination">
+            <!-- Pagination buttons will be added by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const itemsPerPage = 50;
+        let currentPage = 1;
+        let domains = [];
+
+        function renderTable(page) {
+            const tableBody = document.querySelector('#domainTable tbody');
+            const pagination = document.querySelector('#pagination');
+
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            tableBody.innerHTML = '';
+
+            domains.slice(start, end).forEach((domain, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${start + index + 1}</td>
+                    <td>${domain.name}</td>
+                    <td>${domain.price}</td>
+                    <td><a href="${domain.link}" class="button" target="_blank">Buy</a></td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            const totalPages = Math.ceil(domains.length / itemsPerPage);
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLink = document.createElement('a');
+                pageLink.href = '#';
+                pageLink.textContent = i;
+                pageLink.className = i === page ? 'active' : '';
+                pageLink.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    currentPage = i;
+                    renderTable(currentPage);
+                });
+                pagination.appendChild(pageLink);
+            }
+        }
+
+        // Fetch data from the JSON file
+        fetch('domain.json')
+            .then(response => response.json())
+            .then(data => {
+                domains = data;
+                renderTable(currentPage);
+            })
+            .catch(error => console.error('Error loading data:', error));
+    </script>
+</body>
+</html>
