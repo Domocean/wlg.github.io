@@ -52,6 +52,7 @@
         }
         th {
             background-color: #f4f4f4;
+            cursor: pointer;
         }
         tr:hover {
             background-color: #f1f1f1;
@@ -110,11 +111,22 @@
         .search-button:hover {
             background-color: #0056b3;
         }
+        @media (max-width: 768px) {
+            .search-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-input {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <a href="domain">
+        <a href="domain.html">
             <img src="https://helpwin.net/helpwin.svg" alt="Logo">
             <h1>Domain List {Dotcorner}</h1>
             <h3>Make money with Mr Kehel</h3>
@@ -130,7 +142,7 @@
                 <tr>
                     <th>Number</th>
                     <th>Domain Name</th>
-                    <th>Domain Price</th>
+                    <th id="priceHeader">Domain Price</th>
                     <th>Purchase Link</th>
                 </tr>
             </thead>
@@ -147,6 +159,7 @@
         let currentPage = 1;
         let domains = [];
         let filteredDomains = [];
+        let sortAscending = true;
 
         function renderTable(page) {
             const tableBody = document.querySelector('#domainTable tbody');
@@ -188,9 +201,19 @@
         function filterDomains(query) {
             query = query.toLowerCase();
             filteredDomains = domains.filter(domain => 
-                domain.name.toLowerCase().includes(query) || domain.price.toLowerCase().includes(query)
+                domain.name.toLowerCase().includes(query) || domain.price.toLowerCase().includes(query.replace(/,/g, ''))
             );
             currentPage = 1;
+            renderTable(currentPage);
+        }
+
+        function sortDomainsByPrice() {
+            filteredDomains.sort((a, b) => {
+                const priceA = parseFloat(a.price.replace(/,/g, ''));
+                const priceB = parseFloat(b.price.replace(/,/g, ''));
+                return sortAscending ? priceA - priceB : priceB - priceA;
+            });
+            sortAscending = !sortAscending;
             renderTable(currentPage);
         }
 
@@ -198,6 +221,15 @@
             const query = document.getElementById('searchInput').value;
             filterDomains(query);
         });
+
+        document.getElementById('searchInput').addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                const query = document.getElementById('searchInput').value;
+                filterDomains(query);
+            }
+        });
+
+        document.getElementById('priceHeader').addEventListener('click', sortDomainsByPrice);
 
         fetch('https://helpwin.net/domain.json')
             .then(response => {
