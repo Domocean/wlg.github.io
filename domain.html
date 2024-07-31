@@ -211,7 +211,7 @@
         function filterDomains(query) {
             query = query.toLowerCase();
             filteredDomains = domains.filter(domain => 
-                domain.name.toLowerCase().includes(query) || domain.price.toLowerCase().includes(query.replace(/,/g, ''))
+                domain.name.toLowerCase().includes(query) || domain.price.replace(/,/g, '').includes(query.replace(/,/g, ''))
             );
             currentPage = 1;
             renderTable(currentPage);
