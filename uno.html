@@ -247,8 +247,6 @@
                 <div style="text-align: center;">
                     <button class="bubbly-button" onclick="playSound('unoSound')">UNO Sound</button>
                     <audio id="unoSound" src="https://www.helpwin.net/extra.mp3"></audio>
-                    <img src="https://www.helpwin.net/uno.jpg" class="vibrating-image" onclick="playSound('anotherSound')" />
-                    <audio id="anotherSound" src="https://www.helpwin.net/chofoni.mp3"></audio>
                 </div>
 
                 <!-- Image Grid Section -->
@@ -278,32 +276,6 @@
         function playSound(soundId) {
             var sound = document.getElementById(soundId);
             sound.play();
-            if (soundId === 'anotherSound') {
-                changeBackgroundColor(soundId);
-                vibrateImage();
-            }
-        }
-
-        function changeBackgroundColor(soundId) {
-            var colors = ['red', 'blue', 'green', 'yellow'];
-            var i = 0;
-            var intervalId = setInterval(function() {
-                document.body.style.backgroundColor = colors[i++];
-                if (i >= colors.length) i = 0;
-            }, 1000);
-
-            document.getElementById(soundId).onended = function() {
-                clearInterval(intervalId);
-                document.body.style.backgroundColor = '';
-            };
-        }
-
-        function vibrateImage() {
-            var img = document.querySelector('.vibrating-image');
-            img.style.animationPlayState = 'running';
-            setTimeout(function() {
-                img.style.animationPlayState = 'paused';
-            }, 8000);
         }
     </script>
 </body>
