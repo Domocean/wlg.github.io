@@ -150,8 +150,8 @@
                         <div class="color yellow"></div>
                         <div class="color red"></div>
                         <div class="arrow" id="arrow"></div>
-                        <button id="randomColorButton">Choose a color</button>
                     </div>
+                    <button id="randomColorButton">Choose a color</button>
                 </div>
 
                 <audio id="colorSound">
@@ -160,22 +160,22 @@
                 </audio>
 
                 <script>
-                    document.getElementById('colorCircle').addEventListener('click', function() {
+                    document.getElementById('randomColorButton').addEventListener('click', function() {
                         const arrow = document.getElementById('arrow');
-                        const circle = document.getElementById('colorCircle');
                         const colors = ['green', 'blue', 'yellow', 'red'];
                         const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-                        const colorElements = document.querySelectorAll('.color');
-                        colorElements.forEach(element => {
+                        // Reset the colors
+                        document.querySelectorAll('.color').forEach(element => {
                             element.classList.remove('active');
                         });
 
+                        // Play sound
                         const sound = document.getElementById('colorSound');
                         sound.currentTime = 0;
                         sound.play();
 
-                        // Animate the arrow movement
+                        // Move the arrow
                         let angle = 0;
                         switch (randomColor) {
                             case 'green':
@@ -193,8 +193,9 @@
                         }
                         arrow.style.transform = `rotate(${angle}deg)`;
 
+                        // Set the color as active after a delay
                         setTimeout(() => {
-                            colorElements.forEach(element => {
+                            document.querySelectorAll('.color').forEach(element => {
                                 if (element.classList.contains(randomColor)) {
                                     element.classList.add('active');
                                 }
@@ -209,5 +210,6 @@
     <footer>
         &copy; 2024 Referral Page. All rights reserved.
     </footer>
+
 </body>
 </html>
