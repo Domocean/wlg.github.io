@@ -204,10 +204,10 @@
             <div class="box">
                 <div class="game-container">
                     <div class="color-bar" id="colorBar">
-                        <div class="color green" onclick="changeColor('green')"></div>
-                        <div class="color blue" onclick="changeColor('blue')"></div>
-                        <div class="color yellow" onclick="changeColor('yellow')"></div>
-                        <div class="color red" onclick="changeColor('red')"></div>
+                        <div class="color green"></div>
+                        <div class="color blue"></div>
+                        <div class="color yellow"></div>
+                        <div class="color red"></div>
                     </div>
 
                     <audio id="colorSound">
@@ -215,13 +215,26 @@
                         Your browser does not support the audio element.
                     </audio>
 
+                    <button id="colorButton" onclick="chooseRandomColor()">Choose Random Color</button>
+
                     <script>
-                        function changeColor(color) {
+                        function chooseRandomColor() {
+                            // Array of colors to choose from
+                            const colors = ['green', 'blue', 'yellow', 'red'];
+                            
+                            // Randomly choose a color
+                            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+                            // Reset the active class on all color elements
                             const colorElements = document.querySelectorAll('.color');
                             colorElements.forEach(element => {
                                 element.classList.remove('active');
                             });
-                            document.querySelector(`.${color}`).classList.add('active');
+
+                            // Activate the randomly selected color
+                            document.querySelector(`.${randomColor}`).classList.add('active');
+                            
+                            // Play sound when color is chosen
                             const sound = document.getElementById('colorSound');
                             sound.currentTime = 0;
                             sound.play();
