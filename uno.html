@@ -7,7 +7,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 0;
             margin: 0;
             background-color: #f0f2f5;
         }
@@ -21,18 +20,16 @@
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
-            margin-top: 20px;
         }
         .box {
             flex: 1 1 300px;
-            background-color: #ffffff;
+            background-color: #fff;
             border: 1px solid #ddd;
             padding: 20px;
             text-align: center;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
             position: relative;
-            margin-bottom: 20px;
         }
         .box:hover {
             transform: translateY(-5px);
@@ -44,8 +41,53 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .box h2 {
+        .game-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .circle {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 2s ease;
+            margin: 0 auto;
             cursor: pointer;
+        }
+        .color {
+            width: 50%;
+            height: 50%;
+        }
+        .color.active {
+            transform: scale(1.5);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+        .green { background-color: green; }
+        .blue { background-color: blue; }
+        .yellow { background-color: yellow; }
+        .red { background-color: red; }
+        button {
+            padding: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: #18181A;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            transition: background-color 0.3s;
+            width: 100%;
+            max-width: 350px;
+            box-sizing: border-box;
+            height: 100px;
+            margin: 10px auto;
+        }
+        button:hover {
+            background-color: #03151E;
         }
         .image-grid {
             display: grid;
@@ -57,9 +99,8 @@
             width: 100%;
             border-radius: 8px;
             cursor: pointer;
+            max-width: 100%; /* To reduce size of images */
         }
-
-        /* Responsive design */
         @media (max-width: 768px) {
             .image-grid {
                 grid-template-columns: 1fr 1fr;
@@ -87,16 +128,27 @@
                     </div>
                     <audio id="colorSound">
                         <source src="https://www.helpwin.net/cr.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
                     </audio>
+                    <script>
+                        document.getElementById('colorCircle').addEventListener('click', function() {
+                            const colors = ['green', 'blue', 'yellow', 'red'];
+                            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                            document.querySelectorAll('.color').forEach(element => element.classList.remove('active'));
+                            const sound = document.getElementById('colorSound');
+                            sound.currentTime = 0;
+                            sound.play();
+                            this.style.transform = 'rotate(720deg)';
+                            setTimeout(() => {
+                                this.style.transform = 'none';
+                                document.querySelector(`.color.${randomColor}`).classList.add('active');
+                            }, 2000);
+                        });
+                    </script>
                 </div>
-
-                <div style="text-align: center;">
-                    <button class="bubbly-button" onclick="playSound('unoSound')">UNO Sound</button>
+                <div>
+                    <button onclick="playSound('unoSound')">UNO Sound</button>
                     <audio id="unoSound" src="https://www.helpwin.net/extra.mp3"></audio>
                 </div>
-
-                <!-- Image Grid Section -->
                 <div class="image-grid">
                     <div><img src="https://www.helpwin.net/IMG_20250331_112356.jpg" onclick="playSound('sound1')" /></div>
                     <div><img src="https://www.helpwin.net/IMG_20250331_111903.jpg" onclick="playSound('sound2')" /></div>
@@ -114,11 +166,9 @@
             </div>
         </div>
     </div>
-
     <script>
         function playSound(soundId) {
-            var sound = document.getElementById(soundId);
-            sound.play();
+            document.getElementById(soundId).play();
         }
     </script>
 </body>
