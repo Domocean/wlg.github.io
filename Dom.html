@@ -106,6 +106,10 @@
             
             const sound = new Audio(selectedImage.getAttribute('data-sound'));
             sound.play();
+            
+            setTimeout(() => {
+                selectedImage.style.display = 'none';
+            }, 10000); // إخفاء الصورة بعد 10 ثوانٍ
         }
     </script>
 </body>
