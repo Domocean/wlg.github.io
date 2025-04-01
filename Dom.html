@@ -6,8 +6,20 @@
     <title>اختيار صورة عشوائية</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
-        #imageContainer img { max-width: 300px; margin: 10px; display: inline-block; transition: transform 0.3s ease-in-out; }
-        .selected { animation: shake 0.5s; }
+        #imageContainer img { 
+            max-width: 300px; 
+            margin: 10px; 
+            display: none; 
+            transition: transform 0.3s ease-in-out, opacity 0.5s ease-in-out;
+        }
+        .selected {
+            display: inline-block;
+            animation: fadeIn 0.5s, shake 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
         @keyframes shake {
             0% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
@@ -30,9 +42,10 @@
     <script>
         function pickRandomImage() {
             const images = document.querySelectorAll('#imageContainer img');
-            images.forEach(img => img.classList.remove('selected'));
+            images.forEach(img => img.style.display = 'none');
             const randomIndex = Math.floor(Math.random() * images.length);
             images[randomIndex].classList.add('selected');
+            images[randomIndex].style.display = 'inline-block';
         }
     </script>
 </body>
