@@ -1,16 +1,31 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اختيار صورة عشوائية</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        #imageContainer img { 
-            max-width: 300px; 
-            margin: 10px; 
-            display: none; 
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        h2 { color: #333; }
+        button {
+            font-size: 20px;
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover { background-color: #0056b3; transform: scale(1.05); }
+        button:active { background-color: #004099; transform: scale(0.95); }
+        #imageContainer img {
+            max-width: 300px;
+            margin: 10px;
+            display: none;
             transition: transform 0.3s ease-in-out, opacity 0.5s ease-in-out;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
         }
         .selected {
             display: inline-block;
@@ -33,19 +48,29 @@
     <h2>اضغط على الزر لاختيار صورة عشوائية</h2>
     <button onclick="pickRandomImage()">اختيار صورة عشوائية</button>
     <div id="imageContainer">
-        <img src="https://www.helpwin.net/IMG_20250331_111731.jpg" alt="صورة 1">
-        <img src="https://www.helpwin.net/IMG_20250331_111746.jpg" alt="صورة 2">
-        <img src="https://www.helpwin.net/IMG_20250331_111835.jpg" alt="صورة 3">
-        <img src="https://www.helpwin.net/IMG_20250331_112356.jpg" alt="صورة 4">
+        <img src="https://www.helpwin.net/IMG_20250331_111731.jpg" alt="صورة 1" data-sound="sound1.mp3">
+        <img src="https://www.helpwin.net/IMG_20250331_111746.jpg" alt="صورة 2" data-sound="sound2.mp3">
+        <img src="https://www.helpwin.net/IMG_20250331_111835.jpg" alt="صورة 3" data-sound="sound3.mp3">
+        <img src="https://www.helpwin.net/IMG_20250331_112356.jpg" alt="صورة 4" data-sound="sound4.mp3">
     </div>
-    
+    <audio id="buttonSound" src="button-click.mp3"></audio>
     <script>
         function pickRandomImage() {
+            document.getElementById('buttonSound').play();
             const images = document.querySelectorAll('#imageContainer img');
             images.forEach(img => img.style.display = 'none');
-            const randomIndex = Math.floor(Math.random() * images.length);
-            images[randomIndex].classList.add('selected');
-            images[randomIndex].style.display = 'inline-block';
+            
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * images.length);
+            } while (randomIndex === 3 && Math.random() < 0.7); // اجعل الصورة 4 أقل احتمالًا للظهور
+            
+            const selectedImage = images[randomIndex];
+            selectedImage.classList.add('selected');
+            selectedImage.style.display = 'inline-block';
+            
+            const sound = new Audio(selectedImage.getAttribute('data-sound'));
+            sound.play();
         }
     </script>
 </body>
