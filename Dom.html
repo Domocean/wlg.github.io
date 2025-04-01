@@ -42,11 +42,28 @@
             75% { transform: translateX(-5px); }
             100% { transform: translateX(0); }
         }
+        #progressBarContainer {
+            width: 50%;
+            margin: 20px auto;
+            background-color: #ddd;
+            border-radius: 10px;
+            display: none;
+        }
+        #progressBar {
+            width: 0%;
+            height: 20px;
+            background-color: #007bff;
+            border-radius: 10px;
+            transition: width 5s linear;
+        }
     </style>
 </head>
 <body>
     <h2>اضغط على الزر لاختيار صورة عشوائية</h2>
-    <button onclick="pickRandomImage()">اختيار صورة عشوائية</button>
+    <button onclick="startSelectionProcess()">اختيار صورة عشوائية</button>
+    <div id="progressBarContainer">
+        <div id="progressBar"></div>
+    </div>
     <div id="imageContainer">
         <img src="https://www.helpwin.net/IMG_20250331_111731.jpg" alt="صورة 1" data-sound="sound1.mp3">
         <img src="https://www.helpwin.net/IMG_20250331_111746.jpg" alt="صورة 2" data-sound="sound2.mp3">
@@ -55,8 +72,16 @@
     </div>
     <audio id="buttonSound" src="button-click.mp3"></audio>
     <script>
-        function pickRandomImage() {
+        function startSelectionProcess() {
             document.getElementById('buttonSound').play();
+            document.getElementById('progressBarContainer').style.display = 'block';
+            document.getElementById('progressBar').style.width = '0%';
+            setTimeout(() => document.getElementById('progressBar').style.width = '100%', 10);
+            setTimeout(pickRandomImage, 5000);
+        }
+
+        function pickRandomImage() {
+            document.getElementById('progressBarContainer').style.display = 'none';
             const images = document.querySelectorAll('#imageContainer img');
             images.forEach(img => img.style.display = 'none');
             
