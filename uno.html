@@ -59,22 +59,24 @@
 
     /* زر الصوت */
     button {
-      padding: 20px;
-      font-size: 20px;
+      font-size: 32px;
       background-color: #18181A;
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       width: 100%;
-      max-width: 320px;
+      max-width: 420px;
+      height: 160px;
       cursor: pointer;
-      margin: 10px auto;
+      margin: 20px auto;
       display: block;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s, transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
     button:hover {
       background-color: #03151E;
+      transform: scale(1.02);
     }
 
     /* شبكة الصور */
@@ -102,8 +104,8 @@
 
     @media (max-width: 400px) {
       button {
-        font-size: 18px;
-        padding: 18px;
+        font-size: 28px;
+        height: 140px;
       }
       .circle {
         width: 150px;
@@ -123,14 +125,12 @@
         <div class="color red"></div>
       </div>
 
-      <button id="randomColorButton">Choose a color</button>
-
       <audio id="colorSound">
         <source src="https://domocean.github.io/wlg.github.io/cr.mp3" type="audio/mpeg">
       </audio>
 
       <div>
-        <button onclick="playSound('unoSound')">UNO Sound</button>
+        <button onclick="playSound('unoSound')">UNO SOUND</button>
         <audio id="unoSound" src="https://domocean.github.io/wlg.github.io/extra.mp3"></audio>
       </div>
 
