@@ -89,8 +89,16 @@
 
     .image-grid img {
       width: 100%;
-      border-radius: 8px;
+      aspect-ratio: 1 / 1; /* يجعل الصور مربعة */
+      object-fit: cover; /* يجعلها بنفس المقاس */
+      border-radius: 10px;
       cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .image-grid img:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
 
     @keyframes vibrate {
@@ -180,4 +188,3 @@
 
 </body>
 </html>
-
