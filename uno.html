@@ -1,106 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UNO Sound Button - Mobile View</title>
+  <title>UNO Sound Button - Modernized</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    :root {
+      --primary-bg: #f0f2f5;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      --button-bg: #1a1a1a;
+      --button-hover: #2c2c2c;
+      --text-color: #333;
+      --green: #2ecc71;
+      --blue: #3498db;
+      --yellow: #f1c40f;
+      --red: #e74c3c;
+      --transition: all 0.3s ease;
+    }
+
+    /* دعم الوضع الداكن */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary-bg: #1e1e1e;
+        --card-bg: #2c2c2c;
+        --text-color: #e0e0e0;
+        --button-bg: #3498db;
+        --button-hover: #2980b9;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 10px;
-      background-color: #f0f2f5;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: var(--primary-bg);
+      color: var(--text-color);
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      transition: var(--transition);
     }
 
     .container {
-      max-width: 480px;
+      max-width: 32rem;
+      width: 100%;
       margin: 0 auto;
     }
 
     .box {
-      background-color: #ffffff;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      background: var(--card-bg);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
       text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
     }
 
-    /* دائرة الألوان */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .circle {
       position: relative;
-      width: 180px;
-      height: 180px;
+      width: 12rem;
+      height: 12rem;
       border-radius: 50%;
-      margin: 20px auto;
-      display: flex;
-      flex-wrap: wrap;
+      margin: 1.5rem auto;
+      display: grid;
+      grid-template: 1fr 1fr / 1fr 1fr;
       overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 2s ease;
+      box-shadow: var(--shadow);
+      transition: transform 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       cursor: pointer;
     }
 
     .color {
-      width: 50%;
-      height: 50%;
-      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .color::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(255,255,255,0.2), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .color.active::before {
+      opacity: 1;
     }
 
     .color.active {
-      transform: scale(1.5);
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+      transform: scale(1.2);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
       z-index: 10;
     }
 
-    .green { background-color: green; }
-    .blue { background-color: blue; }
-    .yellow { background-color: yellow; }
-    .red { background-color: red; }
+    .green { background-color: var(--green); }
+    .blue { background-color: var(--blue); }
+    .yellow { background-color: var(--yellow); }
+    .red { background-color: var(--red); }
 
-    /* زر الصوت */
     button {
-      font-size: 32px;
-      background-color: #18181A;
+      font-size: 1.5rem;
+      font-weight: 600;
+      background: var(--button-bg);
       color: #fff;
       border: none;
-      border-radius: 12px;
+      border-radius: 0.75rem;
       width: 100%;
-      max-width: 420px;
-      height: 160px;
+      max-width: 28rem;
+      height: 10rem;
       cursor: pointer;
-      margin: 20px auto;
-      display: block;
-      transition: background-color 0.3s, transform 0.2s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      margin: 1.5rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    button:hover::before {
+      transform: translateX(100%);
     }
 
     button:hover {
-      background-color: #03151E;
-      transform: scale(1.02);
+      background: var(--button-hover);
+      transform: translateY(-2px);
     }
 
-    /* شبكة الصور */
+    button:active {
+      transform: scale(0.98);
+    }
+
     .image-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.5rem;
     }
 
     .image-grid img {
       width: 100%;
-      aspect-ratio: 1 / 1; /* يجعل الصور مربعة */
-      object-fit: cover; /* يجعلها بنفس المقاس */
-      border-radius: 10px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 0.75rem;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .image-grid img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     }
 
     .image-grid img:active {
       transform: scale(0.95);
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
 
+    /* تأثير الاهتزاز */
     @keyframes vibrate {
       0% { transform: translate(0); }
       20% { transform: translate(-2px, 2px); }
@@ -110,20 +191,20 @@
       100% { transform: translate(0); }
     }
 
-    @media (max-width: 400px) {
+    /* استجابة للشاشات الصغيرة */
+    @media (max-width: 28rem) {
       button {
-        font-size: 28px;
-        height: 140px;
+        font-size: 1.25rem;
+        height: 8rem;
       }
       .circle {
-        width: 150px;
-        height: 150px;
+        width: 10rem;
+        height: 10rem;
       }
     }
   </style>
 </head>
 <body>
-
   <div class="container">
     <div class="box">
       <div class="circle" id="colorCircle">
@@ -137,16 +218,14 @@
         <source src="https://domocean.github.io/wlg.github.io/cr.mp3" type="audio/mpeg">
       </audio>
 
-      <div>
-        <button onclick="playSound('unoSound')">UNO SOUND</button>
-        <audio id="unoSound" src="https://domocean.github.io/wlg.github.io/extra.mp3"></audio>
-      </div>
+      <button onclick="playSound('unoSound')">UNO SOUND</button>
+      <audio id="unoSound" src="https://domocean.github.io/wlg.github.io/extra.mp3"></audio>
 
       <div class="image-grid">
-        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_112356.jpg" onclick="playSound('sound1')" />
-        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111903.jpg" onclick="playSound('sound2')" />
-        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111746.jpg" onclick="playSound('sound3')" />
-        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111809.jpg" onclick="playSound('sound4')" />
+        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_112356.jpg" onclick="playSound('sound1')" title="صوت القطة" />
+        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111903.jpg" onclick="playSound('sound2')" title="صوت الانبهار" />
+        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111746.jpg" onclick="playSound('sound3')" title="أغنية مضحكة" />
+        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111809.jpg" onclick="playSound('sound4')" title="مرحبا بيك" />
       </div>
 
       <audio id="sound1" src="https://domocean.github.io/wlg.github.io/cat-laugh-meme-1.mp3"></audio>
@@ -157,14 +236,21 @@
   </div>
 
   <script>
+    // تحسين إدارة الصوت
+    const sounds = new Map();
+    document.querySelectorAll('audio').forEach(audio => {
+      sounds.set(audio.id, audio);
+    });
+
     function playSound(id) {
-      const sound = document.getElementById(id);
+      const sound = sounds.get(id);
       if (sound) {
         sound.currentTime = 0;
-        sound.play();
+        sound.play().catch(err => console.error('Error playing sound:', err));
       }
     }
 
+    // تحسين تفاعل الدائرة
     const circle = document.getElementById('colorCircle');
     circle.addEventListener('click', () => {
       const colors = ['green', 'blue', 'yellow', 'red'];
@@ -172,20 +258,21 @@
       const colorElements = document.querySelectorAll('.color');
       colorElements.forEach(c => c.classList.remove('active'));
 
-      const sound = document.getElementById('colorSound');
-      sound.currentTime = 0;
-      sound.play();
-
+      playSound('colorSound');
       circle.style.transform = 'rotate(720deg)';
+      circle.style.transition = 'transform 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+
       setTimeout(() => {
         circle.style.transform = 'none';
         colorElements.forEach(el => {
-          if (el.classList.contains(randomColor)) el.classList.add('active');
+          if (el.classList.contains(randomColor)) {
+            el.classList.add('active');
+            el.style.animation = 'vibrate 0.3s ease';
+            setTimeout(() => el.style.animation = '', 300);
+          }
         });
-      }, 2000);
+      }, 1500);
     });
   </script>
-
 </body>
 </html>
-
