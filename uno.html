@@ -78,7 +78,7 @@
       grid-template: 1fr 1fr / 1fr 1fr;
       overflow: hidden;
       box-shadow: var(--shadow);
-      transition: transform 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: transform 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), all 0.5s ease;
       cursor: pointer;
     }
 
@@ -105,6 +105,23 @@
       transform: scale(1.2);
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
       z-index: 10;
+    }
+
+    /* تأثير ملء الدائرة باللون الفائز */
+    .color.winner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      transform: scale(1);
+      transition: all 0.5s ease;
+    }
+
+    /* إخفاء الألوان الأخرى عند اختيار الفائز */
+    .circle.winner-mode .color:not(.winner) {
+      opacity: 0;
     }
 
     .green { background-color: var(--green); }
@@ -256,22 +273,29 @@
       const colors = ['green', 'blue', 'yellow', 'red'];
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
       const colorElements = document.querySelectorAll('.color');
-      colorElements.forEach(c => c.classList.remove('active'));
+      colorElements.forEach(c => c.classList.remove('active', 'winner'));
 
       playSound('colorSound');
       circle.style.transform = 'rotate(720deg)';
-      circle.style.transition = 'transform 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+      circle.style.transition = 'transform 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
 
       setTimeout(() => {
         circle.style.transform = 'none';
+        circle.classList.add('winner-mode');
         colorElements.forEach(el => {
           if (el.classList.contains(randomColor)) {
-            el.classList.add('active');
+            el.classList.add('winner');
             el.style.animation = 'vibrate 0.3s ease';
             setTimeout(() => el.style.animation = '', 300);
           }
         });
-      }, 1500);
+
+        // العودة إلى الشكل الأصلي بعد 8 ثوانٍ
+        setTimeout(() => {
+          circle.classList.remove('winner-mode');
+          colorElements.forEach(el => el.classList.remove('winner'));
+        }, 8000);
+      }, 3500);
     });
   </script>
 </body>
