@@ -78,7 +78,7 @@
       grid-template: 1fr 1fr / 1fr 1fr;
       overflow: hidden;
       box-shadow: var(--shadow);
-      transition: transform 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), all 0.5s ease;
+      transition: transform 2s cubic-bezier(0.68, -0.55, 0.265, 1.55), all 0.5s ease;
       cursor: pointer;
     }
 
@@ -239,10 +239,18 @@
       <audio id="unoSound" src="https://domocean.github.io/wlg.github.io/extra.mp3"></audio>
 
       <div class="image-grid">
-        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_112356.jpg" onclick="playSound('sound1')" title="صوت القطة" />
-        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111903.jpg" onclick="playSound('sound2')" title="صوت الانبهار" />
-        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111746.jpg" onclick="playSound('sound3')" title="أغنية مضحكة" />
-        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111809.jpg" onclick="playSound('sound4')" title="مرحبا بيك" />
+        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_112356.jpg" 
+             data-gif="https://domocean.github.io/wlg.github.io/gif1.gif" 
+             onclick="playSound('sound1', this)" title="صوت القطة" />
+        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111903.jpg" 
+             data-gif="https://domocean.github.io/wlg.github.io/gif2.gif" 
+             onclick="playSound('sound2', this)" title="صوت الانبهار" />
+        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111746.jpg" 
+             data-gif="https://domocean.github.io/wlg.github.io/gif4.gif" 
+             onclick="playSound('sound3', this)" title="أغنية مضحكة" />
+        <img src="https://domocean.github.io/wlg.github.io/IMG_20250331_111809.jpg" 
+             data-gif="https://domocean.github.io/wlg.github.io/gif3.gif" 
+             onclick="playSound('sound4', this)" title="مرحبا بيك" />
       </div>
 
       <audio id="sound1" src="https://domocean.github.io/wlg.github.io/cat-laugh-meme-1.mp3"></audio>
@@ -259,9 +267,32 @@
       sounds.set(audio.id, audio);
     });
 
-    function playSound(id) {
+    function playSound(id, imgElement) {
       const sound = sounds.get(id);
-      if (sound) {
+      if (sound && imgElement) {
+        // حفظ المصدر الأصلي للصورة
+        const originalSrc = imgElement.src;
+        const gifSrc = imgElement.getAttribute('data-gif');
+        
+        // تبديل الصورة إلى GIF
+        if (gifSrc) {
+          imgElement.src = gifSrc;
+        }
+
+        sound.currentTime = 0;
+        sound.play().catch(err => console.error('Error playing sound:', err));
+
+        // إرجاع الصورة إلى الحالة الثابتة بعد انتهاء الصوت
+        sound.onended = () => {
+          imgElement.src = originalSrc;
+        };
+
+        // إرجاع الصورة بعد 5 ثوانٍ كإجراء احتياطي (في حالة عدم انتهاء الصوت)
+        setTimeout(() => {
+          imgElement.src = originalSrc;
+        }, 5000);
+      } else if (sound) {
+        // تشغيل الصوت بدون تغيير صورة (للزر UNO SOUND)
         sound.currentTime = 0;
         sound.play().catch(err => console.error('Error playing sound:', err));
       }
@@ -277,7 +308,7 @@
 
       playSound('colorSound');
       circle.style.transform = 'rotate(720deg)';
-      circle.style.transition = 'transform 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+      circle.style.transition = 'transform 2s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
 
       setTimeout(() => {
         circle.style.transform = 'none';
