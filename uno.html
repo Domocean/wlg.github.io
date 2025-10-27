@@ -107,7 +107,25 @@
       z-index: 10;
     }
 
-    /* تأثير ملء الدائرة باللون الفائز */
+    /* تأثيرات جديدة للفائز */
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+      50% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 255, 255, 0.6); }
+      100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes particle {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-50px) scale(0); opacity: 0; }
+    }
+
+    /* تحسين تأثير الفائز */
     .color.winner {
       position: absolute;
       top: 0;
@@ -116,12 +134,40 @@
       height: 100%;
       z-index: 20;
       transform: scale(1);
-      transition: all 0.5s ease;
+      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      animation: glow 1.5s infinite, pulse 1.5s infinite;
+      will-change: transform, box-shadow;
     }
 
-    /* إخفاء الألوان الأخرى عند اختيار الفائز */
+    /* إضافة تأثير الجزيئات */
+    .winner-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 30;
+    }
+
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      animation: particle 1s ease-out forwards;
+    }
+
+    /* تحسين انتقال الدائرة */
+    .circle.winner-mode {
+      transition: all 0.8s ease;
+    }
+
+    /* إخفاء الألوان الأخرى بسلاسة */
     .circle.winner-mode .color:not(.winner) {
       opacity: 0;
+      transition: opacity 0.5s ease;
     }
 
     .green { background-color: var(--green); }
@@ -270,11 +316,9 @@
     function playSound(id, imgElement) {
       const sound = sounds.get(id);
       if (sound && imgElement) {
-        // حفظ المصدر الأصلي للصورة
         const originalSrc = imgElement.src;
         const gifSrc = imgElement.getAttribute('data-gif');
         
-        // تبديل الصورة إلى GIF
         if (gifSrc) {
           imgElement.src = gifSrc;
         }
@@ -282,20 +326,38 @@
         sound.currentTime = 0;
         sound.play().catch(err => console.error('Error playing sound:', err));
 
-        // إرجاع الصورة إلى الحالة الثابتة بعد انتهاء الصوت
         sound.onended = () => {
           imgElement.src = originalSrc;
         };
 
-        // إرجاع الصورة بعد 5 ثوانٍ كإجراء احتياطي (في حالة عدم انتهاء الصوت)
         setTimeout(() => {
           imgElement.src = originalSrc;
         }, 5000);
       } else if (sound) {
-        // تشغيل الصوت بدون تغيير صورة (للزر UNO SOUND)
         sound.currentTime = 0;
         sound.play().catch(err => console.error('Error playing sound:', err));
       }
+    }
+
+    // إضافة تأثير الجزيئات
+    function createParticles(container, count = 20) {
+      const particlesContainer = document.createElement('div');
+      particlesContainer.classList.add('winner-particles');
+      container.appendChild(particlesContainer);
+
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 0.5}s`;
+        particlesContainer.appendChild(particle);
+      }
+
+      // إزالة الجزيئات بعد انتهاء الأنيميشن
+      setTimeout(() => {
+        particlesContainer.remove();
+      }, 1500);
     }
 
     // تحسين تفاعل الدائرة
@@ -316,17 +378,16 @@
         colorElements.forEach(el => {
           if (el.classList.contains(randomColor)) {
             el.classList.add('winner');
-            el.style.animation = 'vibrate 0.3s ease';
-            setTimeout(() => el.style.animation = '', 300);
+            createParticles(circle); // إضافة الجزيئات
           }
         });
 
-        // العودة إلى الشكل الأصلي بعد 8 ثوانٍ
+        // العودة إلى الشكل الأصلي بعد 5 ثوانٍ
         setTimeout(() => {
           circle.classList.remove('winner-mode');
           colorElements.forEach(el => el.classList.remove('winner'));
-        }, 8000);
-      }, 3500);
+        }, 5000);
+      }, 2000);
     });
   </script>
 </body>
