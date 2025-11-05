@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculateur de prix CCTV</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Segoe UI',Arial,sans-serif;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:#333;
+      min-height:100vh;
+      padding:10px;
+    }
+    .container{
+      max-width:900px;
+      margin:0 auto;
+      background:#fff;
+      border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,.2);
+      overflow:hidden;
+      position:relative;
+    }
+    .container::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:5px;
+      background:linear-gradient(90deg,#ff6b6b,#ffd93d,#6bcf7f,#4ecdc4);
+    }
+    .header{text-align:center;padding:20px 0 15px}
+    .logo{
+      width:100px;height:100px;margin:0 auto 12px;
+      border-radius:50%;overflow:hidden;
+      background:#fff;border:4px solid #fff;
+      box-shadow:0 5px 15px rgba(0,0,0,.2);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .logo img{width:80px;height:80px;object-fit:contain}
+    .logo .placeholder{color:#667eea;font-weight:bold;font-size:36px}
+    h1{font-size:1.4rem;color:#2c3e50;margin:0}
+    .form-grid{display:grid;gap:16px;padding:0 20px 20px}
+    .grid-2{grid-template-columns:1fr 1fr;gap:16px}
+    .form-group label{display:block;font-weight:600;color:#555;margin-bottom:6px;font-size:.9rem}
+    select,input[type=number]{
+      width:100%;padding:12px 15px;border:2px solid #e1e8ed;
+      border-radius:12px;background:#f8f9fa;font-size:16px;transition:.3s;
+    }
+    select:focus,input[type=number]:focus{
+      outline:none;border-color:#667eea;background:#fff;
+      box-shadow:0 0 0 3px rgba(102,126,234,.1);
+    }
+    .install-box{
+      background:linear-gradient(135deg,#fff3cd,#ffeaa7);
+      border:2px solid #ffd43b;border-radius:12px;padding:12px;text-align:center;
+    }
+    .install-price{font-size:1.2rem;font-weight:bold;color:#2c3e50;margin-top:4px}
+    .checkbox-group{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+      gap:8px;margin-top:8px;
+    }
+    .checkbox-group label{
+      display:flex;align-items:center;font-weight:normal;cursor:pointer;font-size:.9rem;
+      background:#f8f9fa;padding:8px 10px;border-radius:8px;
+    }
+    .checkbox-group input[type=checkbox]{margin-left:8px}
+    .result{
+      background:linear-gradient(135deg,#2c3e50,#34495e);
+      color:#f39c12;padding:20px;text-align:center;border-radius:15px;
+      margin:20px;box-shadow:0 5px 15px rgba(0,0,0,.1);
+    }
+    .total{font-size:2rem;font-weight:bold;color:#f1c40f;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 20px}
+    button{
+      padding:15px;border:none;border-radius:12px;font-size:16px;
+      font-weight:600;cursor:pointer;transition:.3s;
+    }
+    #calcBtn{background:linear-gradient(135deg,#f39c12,#e67e22);color:#fff}
+    #calcBtn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(243,156,18,.4)}
+    #resetBtn{background:linear-gradient(135deg,#95a5a6,#7f8c8d);color:#fff}
+    #resetBtn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(149,165,166,.4)}
+    @media(max-width:768px){
+      .grid-2{grid-template-columns:1fr}
+      .total{font-size:1.6rem}
+    }
+    @media(max-width:480px){
+      .checkbox-group{grid-template-columns:1fr}
+      .total{font-size:1.4rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <img src="https://domocean.github.io/wlg.github.io/domocean1.png" alt="Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="placeholder" style="display:none">CCTV</div>
+      </div>
+      <h1>CALCULATEUR DE PRIX CCTV</h1>
+    </div>
+
+    <div class="form-grid">
+      <div class="grid-2">
+        <div class="form-group">
+          <label>TYPE DE CAMÉRA</label>
+          <select id="cameraTypeSelect">
+            <option value="">-- Sélectionner --</option>
+            <option value="cam_2mp">CAMERA 2MP</option>
+            <option value="cam_5mp">CAMERA 5MP</option>
+            <option value="cam_8mp">CAMERA 8MP</option>
+            <option value="cam_ip_5">CAMERA IP 5MP</option>
+            <option value="cam_ip_8">CAMERA 4K IP 8MP</option>
+            <option value="cam_wifi_3k">WiFi 3K </option>
+            <option value="cam_wifi_5">WiFi 5MP </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>NOMBRE DE CAMÉRAS</label>
+          <input type="number" id="cameraCount" min="0" value="0">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>ENREGISTREUR</label>
+          <select id="recorderSelect">
+            <option value="">-- Sélectionner --</option>
+            <option value="dvr_4p">DVR 4P 2MP</option>
+            <option value="dvr_8p">DVR 8P 2MP</option>
+            <option value="dvr_16p">DVR 16P 2MP</option>
+            <option value="dvr_5_4p">DVR 5MP 4P </option>
+            <option value="dvr_5_8p">DVR 5MP 8P </option>
+            <option value="dvr_5_16p">DVR 5MP 16P </option>
+            <option value="nvr_4p">NVR 4P 4K </option>
+            <option value="nvr_8p">NVR 8P 4K </option>
+            <option value="nvr_16p">NVR 16P 4K </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>STOCKAGE</label>
+          <select id="storageSelect">
+            <option value="">-- Sélectionner --</option>
+            <option value="hdd_500">500GB NEW</option>
+            <option value="hdd_1tb">1TB NEW</option>
+            <option value="hdd_2tb">2TB NEW</option>
+            <option value="hdd_3tb">3TB NEW</option>
+            <option value="hdd_4tb">4TB NEW</option>
+            <option value="hdd_6tb">6TB NEW</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>ALIMENTATION</label>
+          <select id="powerSelect">
+            <option value="">-- Sélectionner --</option>
+            <option value="ps_4">Bloc 4 CHANNEL</option>
+            <option value="ps_8">Bloc 8 CHANNEL</option>
+            <option value="ps_16">Bloc 16 CHANNEL</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>ARMOIRE</label>
+          <select id="armoireSelect">
+            <option value="">-- Sélectionner --</option>
+            <option value="arm_4u">ARMOIRE 4U </option>
+            <option value="arm_6u">ARMOIRE 6U</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group install-box">
+        <label>INSTALLATION CCTV</label>
+        <div class="install-price" id="installationPrice">0 MAD</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>BNC (unité)</label>
+          <input type="number" id="bncCount" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label>CON (unité)</label>
+          <input type="number" id="conCount" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label>BOITE ETANCHE(unité)</label>
+          <input type="number" id="boxCount" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label>TUBE GORGE (m)</label>
+          <input type="number" id="tubeCount" min="0" step="0.1" value="0">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>GOULOTTE 25x16 (2m)</label>
+          <input type="number" id="g25" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label>GOULOTTE 40x16 (2m)</label>
+          <input type="number" id="g40" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label>CÂBLE CAMERA(m)</label>
+          <input type="number" id="cableMeters" min="0" value="0">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>ACCESSOIRES DROGUERIE</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="acc_ralounge"> RALOUNGE 3S - </label>
+          <label><input type="checkbox" value="acc_colier"> COLIER PLASTIQUE </label>
+          <label><input type="checkbox" value="acc_other"> ACCESSOIRES </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="result">
+      <div>TOTAL</div>
+      <div class="total" id="totalValue">0 MAD</div>
+    </div>
+
+    <div class="btns">
+      <button id="calcBtn">CALCULER</button>
+      <button id="resetBtn">RÉINITIALISER</button>
+    </div>
+  </div>
+
+  <script>
+    const PRICES = {
+      camera: {cam_2mp:140,cam_5mp:250,cam_8mp:340,cam_ip_5:650,cam_ip_8:900,cam_wifi_3k:400,cam_wifi_5:550},
+      recorder:{dvr_4p:450,dvr_8p:550,dvr_16p:850,dvr_5_4p:650,dvr_5_8p:950,dvr_5_16p:1700,nvr_4p:1230,nvr_8p:1740,nvr_16p:2880},
+      storage:{hdd_500:350,hdd_1tb:650,hdd_2tb:750,hdd_3tb:900,hdd_4tb:1250,hdd_6tb:1700},
+      power:{ps_4:120,ps_8:160,ps_16:220},
+      armoire:{arm_4u:400,arm_6u:650},
+      acc:{bnc:3,con:3,box:8,tube:2.5,g25:25,g40:30,cable_per_m:3,acc_ralounge:40,acc_colier:45,acc_other:70},
+      install:{1:250,2:300,3:400,4:450,extra:90}
+    };
+
+    const $ = id => document.getElementById(id);
+    const fmt = n => new Intl.NumberFormat('fr-MA').format(Math.round(n))+' MAD';
+
+    function calcInstall(cam){
+      let price = 0;
+      if(cam>=1 && cam<=4) price = PRICES.install[cam];
+      else if(cam>4) price = PRICES.install[4] + (cam-4)*PRICES.install.extra;
+      $('installationPrice').textContent = fmt(price);
+      return price;
+    }
+
+    function calculate(){
+      let total = 0;
+      const camType = $('cameraTypeSelect').value;
+      const camCnt  = parseFloat($('cameraCount').value)||0;
+
+      if(camType && camCnt>0) total += PRICES.camera[camType]*camCnt;
+
+      total += PRICES.recorder[$('recorderSelect').value]||0;
+      total += PRICES.storage[$('storageSelect').value]||0;
+      total += PRICES.power[$('powerSelect').value]||0;
+      total += PRICES.armoire[$('armoireSelect').value]||0;
+
+      total += (parseFloat($('bncCount').value)||0)*PRICES.acc.bnc;
+      total += (parseFloat($('conCount').value)||0)*PRICES.acc.con;
+      total += (parseFloat($('boxCount').value)||0)*PRICES.acc.box;
+      total += (parseFloat($('tubeCount').value)||0)*PRICES.acc.tube;
+      total += (parseFloat($('g25').value)||0)*PRICES.acc.g25;
+      total += (parseFloat($('g40').value)||0)*PRICES.acc.g40;
+      total += (parseFloat($('cableMeters').value)||0)*PRICES.acc.cable_per_m;
+
+      document.querySelectorAll('input[type=checkbox]:checked').forEach(cb=>{
+        total += PRICES.acc[cb.value]||0;
+      });
+
+      total += calcInstall(camCnt);
+      $('totalValue').textContent = fmt(total);
+    }
+
+    function reset(){
+      document.querySelectorAll('select,input[type=number],input[type=checkbox]').forEach(el=>{
+        if(el.tagName==='SELECT') el.value='';
+        else if(el.type==='number') el.value='0';
+        else if(el.type==='checkbox') el.checked=false;
+      });
+      $('installationPrice').textContent='0 MAD';
+      $('totalValue').textContent='0 MAD';
+    }
+
+    // Événements
+    $('calcBtn').onclick = calculate;
+    $('resetBtn').onclick = reset;
+    $('cameraCount').oninput = () => calcInstall(parseFloat($('cameraCount').value)||0);
+    document.querySelectorAll('input,select').forEach(el=>el.onchange=calculate);
+  </script>
+</body>
+</html>
