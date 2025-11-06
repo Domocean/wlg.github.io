@@ -37,6 +37,20 @@
     .logo img{width:80px;height:80px;object-fit:contain}
     .logo .placeholder{color:#667eea;font-weight:bold;font-size:36px}
     h1{font-size:1.4rem;color:#2c3e50;margin:0}
+    .client-info{
+      background:#f8f9fa;padding:15px 20px;border-bottom:1px solid #eee;
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;
+    }
+    .client-info .form-group label{
+      font-weight:600;color:#444;font-size:0.9rem;
+    }
+    .client-info input{
+      width:100%;padding:10px 12px;border:2px solid #e1e8ed;border-radius:10px;
+      background:#fff;font-size:15px;transition:.3s;
+    }
+    .client-info input:focus{
+      outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.1);
+    }
     .form-grid{display:grid;gap:16px;padding:0 20px 20px}
     .grid-2{grid-template-columns:1fr 1fr;gap:16px}
     .form-group label{display:block;font-weight:600;color:#555;margin-bottom:6px;font-size:.9rem}
@@ -51,8 +65,16 @@
     .install-box{
       background:linear-gradient(135deg,#fff3cd,#ffeaa7);
       border:2px solid #ffd43b;border-radius:12px;padding:12px;text-align:center;
+      position:relative;
     }
     .install-price{font-size:1.2rem;font-weight:bold;color:#2c3e50;margin-top:4px}
+    .toggle-install{
+      margin-top:8px;padding:8px 12px;background:#f39c12;color:#fff;
+      border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;
+      transition:.3s;
+    }
+    .toggle-install:hover{background:#e67e22;transform:translateY(-1px)}
+    .toggle-install.active{background:#27ae60}
     .checkbox-group{
       display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
       gap:8px;margin-top:8px;
@@ -68,7 +90,7 @@
       margin:20px;box-shadow:0 5px 15px rgba(0,0,0,.1);
     }
     .total{font-size:2rem;font-weight:bold;color:#f1c40f;text-shadow:0 2px 4px rgba(0,0,0,.3)}
-    .btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 20px}
+    .btns{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 20px 20px}
     button{
       padding:15px;border:none;border-radius:12px;font-size:16px;
       font-weight:600;cursor:pointer;transition:.3s;
@@ -77,9 +99,31 @@
     #calcBtn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(243,156,18,.4)}
     #resetBtn{background:linear-gradient(135deg,#95a5a6,#7f8c8d);color:#fff}
     #resetBtn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(149,165,166,.4)}
+    #printBtn{background:linear-gradient(135deg,#27ae60,#219a52);color:#fff}
+    #printBtn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(39,174,96,.4)}
+    /* Modal Styles */
+    .modal{
+      display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:1000;
+    }
+    .modal-content{
+      background:#fff;border-radius:16px;padding:24px;width:90%;max-width:400px;
+      box-shadow:0 10px 30px rgba(0,0,0,.3);text-align:center;
+    }
+    .modal-content h3{margin-bottom:16px;color:#2c3e50}
+    .modal-input{margin:12px 0}
+    .modal-input input{
+      width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:16px;
+    }
+    .modal-buttons{display:flex;gap:10px;margin-top:20px}
+    .modal-buttons button{flex:1;padding:12px;border:none;border-radius:10px;font-weight:600;cursor:pointer}
+    .btn-confirm{background:#27ae60;color:#fff}
+    .btn-cancel{background:#95a5a6;color:#fff}
     @media(max-width:768px){
       .grid-2{grid-template-columns:1fr}
+      .btns{grid-template-columns:1fr}
       .total{font-size:1.6rem}
+      .client-info{grid-template-columns:1fr}
     }
     @media(max-width:480px){
       .checkbox-group{grid-template-columns:1fr}
@@ -97,7 +141,24 @@
       <h1>CALCULATEUR DE PRIX CCTV</h1>
     </div>
 
+    <!-- === معلومات العميل === -->
+    <div class="client-info">
+      <div class="form-group">
+        <label>Nom du client</label>
+        <input type="text" id="clientName" placeholder="Ex: Ahmed Benali">
+      </div>
+      <div class="form-group">
+        <label>Téléphone</label>
+        <input type="text" id="clientPhone" placeholder="Ex: 06 XX XX XX XX">
+      </div>
+      <div class="form-group">
+        <label>Adresse</label>
+        <input type="text" id="clientAddress" placeholder="Ex: 123 Rue Casablanca, Maroc">
+      </div>
+    </div>
+
     <div class="form-grid">
+      <!-- باقي الحقول كما هي -->
       <div class="grid-2">
         <div class="form-group">
           <label>TYPE DE CAMÉRA</label>
@@ -117,21 +178,24 @@
           <input type="number" id="cameraCount" min="0" value="0">
         </div>
       </div>
-
+      <!-- ... باقي الحقول (مختصرة) ... -->
       <div class="grid-2">
         <div class="form-group">
           <label>ENREGISTREUR</label>
           <select id="recorderSelect">
             <option value="">-- Sélectionner --</option>
-            <option value="dvr_4p">DVR 4P 2MP</option>
-            <option value="dvr_8p">DVR 8P 2MP</option>
-            <option value="dvr_16p">DVR 16P 2MP</option>
-            <option value="dvr_5_4p">DVR 5MP 4P </option>
-            <option value="dvr_5_8p">DVR 5MP 8P </option>
-            <option value="dvr_5_16p">DVR 5MP 16P </option>
-            <option value="nvr_4p">NVR 4P 4K </option>
-            <option value="nvr_8p">NVR 8P 4K </option>
-            <option value="nvr_16p">NVR 16P 4K </option>
+            <option value="dvr_4p">DVR 2MP 4 PORTS</option>
+            <option value="dvr_8p">DVR 2MP 8 PORTS</option>
+            <option value="dvr_16p">DVR 2MP 16 PORTS</option>
+            <option value="dvr_5_4p">DVR 5MP 4 PORTS</option>
+            <option value="dvr_5_8p">DVR 5MP 8 PORTS </option>
+            <option value="dvr_5_16p">DVR 5MP 16 PORTS </option>
+            <option value="dvr_4k_4p">DVR 8MP 4K 4 PORTS</option>
+            <option value="dvr_4k_8p">DVR 8MP 4K 8 PORTS</option>
+            <option value="dvr_4k_16p">DVR 8MP 4K 16 PORTS</option>
+            <option value="nvr_4p">NVR 4K 4 PORTS</option>
+            <option value="nvr_8p">NVR 4K 8 PORTS</option>
+            <option value="nvr_16p">NVR 4K 16 PORTS </option>
           </select>
         </div>
         <div class="form-group">
@@ -147,7 +211,6 @@
           </select>
         </div>
       </div>
-
       <div class="grid-2">
         <div class="form-group">
           <label>ALIMENTATION</label>
@@ -167,46 +230,24 @@
           </select>
         </div>
       </div>
-
       <div class="form-group install-box">
         <label>INSTALLATION CCTV</label>
         <div class="install-price" id="installationPrice">0 MAD</div>
+        <button type="button" id="toggleInstallBtn" class="toggle-install">
+          Activer le calcul personnalisé
+        </button>
       </div>
-
       <div class="grid-2">
-        <div class="form-group">
-          <label>BNC (unité)</label>
-          <input type="number" id="bncCount" min="0" value="0">
-        </div>
-        <div class="form-group">
-          <label>CON (unité)</label>
-          <input type="number" id="conCount" min="0" value="0">
-        </div>
-        <div class="form-group">
-          <label>BOITE ETANCHE(unité)</label>
-          <input type="number" id="boxCount" min="0" value="0">
-        </div>
-        <div class="form-group">
-          <label>TUBE GORGE (m)</label>
-          <input type="number" id="tubeCount" min="0" step="0.1" value="0">
-        </div>
+        <div class="form-group"><label>BNC (unité)</label><input type="number" id="bncCount" min="0" value="0"></div>
+        <div class="form-group"><label>CON (unité)</label><input type="number" id="conCount" min="0" value="0"></div>
+        <div class="form-group"><label>BOITE ETANCHE(unité)</label><input type="number" id="boxCount" min="0" value="0"></div>
+        <div class="form-group"><label>TUBE GORGE (m)</label><input type="number" id="tubeCount" min="0" step="0.1" value="0"></div>
       </div>
-
       <div class="grid-2">
-        <div class="form-group">
-          <label>GOULOTTE 25x16 (2m)</label>
-          <input type="number" id="g25" min="0" value="0">
-        </div>
-        <div class="form-group">
-          <label>GOULOTTE 40x16 (2m)</label>
-          <input type="number" id="g40" min="0" value="0">
-        </div>
-        <div class="form-group">
-          <label>CÂBLE CAMERA(m)</label>
-          <input type="number" id="cableMeters" min="0" value="0">
-        </div>
+        <div class="form-group"><label>GOULOTTE 25x16 (2m)</label><input type="number" id="g25" min="0" value="0"></div>
+        <div class="form-group"><label>GOULOTTE 40x16 (2m)</label><input type="number" id="g40" min="0" value="0"></div>
+        <div class="form-group"><label>CÂBLE CAMERA(m)</label><input type="number" id="cableMeters" min="0" value="0"></div>
       </div>
-
       <div class="form-group">
         <label>ACCESSOIRES DROGUERIE</label>
         <div class="checkbox-group">
@@ -216,36 +257,52 @@
         </div>
       </div>
     </div>
-
     <div class="result">
       <div>TOTAL</div>
       <div class="total" id="totalValue">0 MAD</div>
     </div>
-
     <div class="btns">
       <button id="calcBtn">CALCULER</button>
       <button id="resetBtn">RÉINITIALISER</button>
+      <button id="printBtn">IMPRIMER LA FACTURE</button>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="installModal" class="modal">
+    <div class="modal-content">
+      <h3>Prix d'installation personnalisé</h3>
+      <p>Entrez le montant convenu avec le client :</p>
+      <div class="modal-input">
+        <input type="number" id="customInstallPrice" min="0" placeholder="0" value="0">
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-confirm" id="confirmInstall">Confirmer</button>
+        <button class="btn-cancel" id="cancelInstall">Annuler</button>
+      </div>
     </div>
   </div>
 
   <script>
     const PRICES = {
       camera: {cam_2mp:140,cam_5mp:250,cam_8mp:340,cam_ip_5:650,cam_ip_8:900,cam_wifi_3k:400,cam_wifi_5:550},
-      recorder:{dvr_4p:450,dvr_8p:550,dvr_16p:850,dvr_5_4p:650,dvr_5_8p:950,dvr_5_16p:1700,nvr_4p:1230,nvr_8p:1740,nvr_16p:2880},
+      recorder:{dvr_4p:450,dvr_8p:550,dvr_16p:850,dvr_5_4p:650,dvr_5_8p:950,dvr_5_16p:1700,dvr_4k_4p:900,dvr_4k_8p:1500,dvr_4k_16p:2900,nvr_4p:1230,nvr_8p:1740,nvr_16p:2880},
       storage:{hdd_500:350,hdd_1tb:650,hdd_2tb:750,hdd_3tb:900,hdd_4tb:1250,hdd_6tb:1700},
       power:{ps_4:120,ps_8:160,ps_16:220},
       armoire:{arm_4u:400,arm_6u:650},
       acc:{bnc:3,con:3,box:8,tube:2.5,g25:25,g40:30,cable_per_m:3,acc_ralounge:40,acc_colier:45,acc_other:70},
       install:{1:250,2:300,3:400,4:450,extra:90}
     };
-
     const $ = id => document.getElementById(id);
     const fmt = n => new Intl.NumberFormat('fr-MA').format(Math.round(n))+' MAD';
+    let customInstallEnabled = false;
+    let customInstallPrice = 0;
 
-    function calcInstall(cam){
+    function calcInstallAuto(cam){
+      if (customInstallEnabled) return customInstallPrice;
       let price = 0;
-      if(cam>=1 && cam<=4) price = PRICES.install[cam];
-      else if(cam>4) price = PRICES.install[4] + (cam-4)*PRICES.install.extra;
+      if(cam >= 1 && cam <= 4) price = PRICES.install[cam];
+      else if(cam > 4) price = PRICES.install[4] + (cam-4)*PRICES.install.extra;
       $('installationPrice').textContent = fmt(price);
       return price;
     }
@@ -253,15 +310,12 @@
     function calculate(){
       let total = 0;
       const camType = $('cameraTypeSelect').value;
-      const camCnt  = parseFloat($('cameraCount').value)||0;
-
+      const camCnt = parseFloat($('cameraCount').value)||0;
       if(camType && camCnt>0) total += PRICES.camera[camType]*camCnt;
-
       total += PRICES.recorder[$('recorderSelect').value]||0;
       total += PRICES.storage[$('storageSelect').value]||0;
       total += PRICES.power[$('powerSelect').value]||0;
       total += PRICES.armoire[$('armoireSelect').value]||0;
-
       total += (parseFloat($('bncCount').value)||0)*PRICES.acc.bnc;
       total += (parseFloat($('conCount').value)||0)*PRICES.acc.con;
       total += (parseFloat($('boxCount').value)||0)*PRICES.acc.box;
@@ -269,30 +323,203 @@
       total += (parseFloat($('g25').value)||0)*PRICES.acc.g25;
       total += (parseFloat($('g40').value)||0)*PRICES.acc.g40;
       total += (parseFloat($('cableMeters').value)||0)*PRICES.acc.cable_per_m;
-
       document.querySelectorAll('input[type=checkbox]:checked').forEach(cb=>{
         total += PRICES.acc[cb.value]||0;
       });
-
-      total += calcInstall(camCnt);
+      total += calcInstallAuto(camCnt);
       $('totalValue').textContent = fmt(total);
+      return total;
     }
 
     function reset(){
-      document.querySelectorAll('select,input[type=number],input[type=checkbox]').forEach(el=>{
+      document.querySelectorAll('select,input[type=number],input[type=checkbox],input[type=text]').forEach(el=>{
         if(el.tagName==='SELECT') el.value='';
-        else if(el.type==='number') el.value='0';
+        else if(el.type==='number' || el.type==='text') el.value='';
         else if(el.type==='checkbox') el.checked=false;
       });
+      customInstallEnabled = false;
+      customInstallPrice = 0;
       $('installationPrice').textContent='0 MAD';
       $('totalValue').textContent='0 MAD';
+      $('toggleInstallBtn').textContent = 'Activer le calcul personnalisé';
+      $('toggleInstallBtn').classList.remove('active');
+      calculate();
     }
 
-    // Événements
+    function printInvoice() {
+      const invoiceItems = [];
+      let total = 0;
+      const date = new Date().toLocaleDateString('fr-FR');
+      const invoiceNumber = 'FACT-' + Date.now().toString().slice(-6);
+
+      // === جمع معلومات العميل ===
+      const clientName = $('clientName').value.trim() || 'Client non spécifié';
+      const clientPhone = $('clientPhone').value.trim() || 'Non renseigné';
+      const clientAddress = $('clientAddress').value.trim() || 'Non renseigné';
+
+      // جمع باقي العناصر (كما كان)
+      const camType = $('cameraTypeSelect').value;
+      const camCnt = parseFloat($('cameraCount').value)||0;
+      if (camType && camCnt > 0) {
+        const camLabel = $('cameraTypeSelect').options[$('cameraTypeSelect').selectedIndex].text;
+        const price = PRICES.camera[camType] * camCnt;
+        invoiceItems.push({label: `${camLabel} × ${camCnt}`, price});
+        total += price;
+      }
+      const recorder = $('recorderSelect').value;
+      if (recorder) {
+        const label = $('recorderSelect').options[$('recorderSelect').selectedIndex].text;
+        const price = PRICES.recorder[recorder];
+        invoiceItems.push({label, price});
+        total += price;
+      }
+      const storage = $('storageSelect').value;
+      if (storage) {
+        const label = $('storageSelect').options[$('storageSelect').selectedIndex].text;
+        const price = PRICES.storage[storage];
+        invoiceItems.push({label, price});
+        total += price;
+      }
+      const power = $('powerSelect').value;
+      if (power) {
+        const label = $('powerSelect').options[$('powerSelect').selectedIndex].text;
+        const price = PRICES.power[power];
+        invoiceItems.push({label, price});
+        total += price;
+      }
+      const armoire = $('armoireSelect').value;
+      if (armoire) {
+        const label = $('armoireSelect').options[$('armoireSelect').selectedIndex].text;
+        const price = PRICES.armoire[armoire];
+        invoiceItems.push({label, price});
+        total += price;
+      }
+      const bnc = parseFloat($('bncCount').value)||0;
+      if (bnc > 0) { invoiceItems.push({label: `BNC × ${bnc}`, price: bnc * PRICES.acc.bnc}); total += bnc * PRICES.acc.bnc; }
+      const con = parseFloat($('conCount').value)||0;
+      if (con > 0) { invoiceItems.push({label: `CON × ${con}`, price: con * PRICES.acc.con}); total += con * PRICES.acc.con; }
+      const box = parseFloat($('boxCount').value)||0;
+      if (box > 0) { invoiceItems.push({label: `BOITE ETANCHE × ${box}`, price: box * PRICES.acc.box}); total += box * PRICES.acc.box; }
+      const tube = parseFloat($('tubeCount').value)||0;
+      if (tube > 0) { invoiceItems.push({label: `TUBE GORGE × ${tube}m`, price: tube * PRICES.acc.tube}); total += tube * PRICES.acc.tube; }
+      const g25 = parseFloat($('g25').value)||0;
+      if (g25 > 0) { invoiceItems.push({label: `GOULOTTE 25x16 × ${g25}`, price: g25 * PRICES.acc.g25}); total += g25 * PRICES.acc.g25; }
+      const g40 = parseFloat($('g40').value)||0;
+      if (g40 > 0) { invoiceItems.push({label: `GOULOTTE 40x16 × ${g40}`, price: g40 * PRICES.acc.g40}); total += g40 * PRICES.acc.g40; }
+      const cable = parseFloat($('cableMeters').value)||0;
+      if (cable > 0) { invoiceItems.push({label: `CÂBLE CAMERA × ${cable}m`, price: cable * PRICES.acc.cable_per_m}); total += cable * PRICES.acc.cable_per_m; }
+      document.querySelectorAll('input[type=checkbox]:checked').forEach(cb => {
+        const label = cb.parentElement.textContent.trim();
+        const price = PRICES.acc[cb.value];
+        invoiceItems.push({label, price});
+        total += price;
+      });
+      const installPrice = customInstallEnabled ? customInstallPrice : calcInstallAuto(camCnt);
+      invoiceItems.push({
+        label: customInstallEnabled ? 'INSTALLATION (Personnalisée)' : 'INSTALLATION CCTV',
+        price: installPrice
+      });
+      total += installPrice;
+
+      // === طباعة الفاتورة مع معلومات العميل ===
+      const printWindow = window.open('', '', 'width=800,height=600');
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <title>Facture CCTV</title>
+          <style>
+            body{font-family:Arial,sans-serif;margin:40px;line-height:1.6;color:#333}
+            .invoice-box{max-width:800px;margin:auto;border:1px solid #eee;padding:30px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.1)}
+            .header{text-align:center;margin-bottom:30px}
+            .header img{width:80px;height:80px;border-radius:50%;margin-bottom:10px}
+            .header h1{font-size:24px;color:#2c3e50}
+            .info{display:flex;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap}
+            .info div{font-size:14px;margin-bottom:8px}
+            .info .client-info{text-align:right}
+            table{width:100%;border-collapse:collapse;margin:20px 0}
+            table th, table td{border:1px solid #ddd;padding:12px;text-align:left}
+            table th{background:#f8f9fa;font-weight:600}
+            .total{font-size:20px;font-weight:bold;text-align:right;margin-top:20px}
+            .footer{text-align:center;margin-top:40px;font-size:12px;color:#777}
+            @media print {.no-print{display:none}}
+          </style>
+        </head>
+        <body>
+          <div class="invoice-box">
+            <div class="header">
+              <img src="https://domocean.github.io/wlg.github.io/domocean1.png" alt="Logo">
+              <h1>FACTURE - SYSTÈME CCTV</h1>
+            </div>
+            <div class="info">
+              <div>
+                <strong>Date:</strong> ${date}<br>
+                <strong>N° Facture:</strong> ${invoiceNumber}
+              </div>
+              <div class="client-info">
+                <strong>Client:</strong> ${clientName}<br>
+                <strong>Tél:</strong> ${clientPhone}<br>
+                <strong>Adresse:</strong> ${clientAddress}
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr><th>Désignation</th><th style="text-align:right">Prix (MAD)</th></tr>
+              </thead>
+              <tbody>
+                ${invoiceItems.map(item => `
+                  <tr>
+                    <td>${item.label}</td>
+                    <td style="text-align:right">${fmt(item.price).replace(' MAD', '')}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            <div class="total">TOTAL : ${fmt(total)}</div>
+            <div class="footer">
+              Merci pour votre confiance !<br>
+              Contact : [Votre numéro] | [Email]
+            </div>
+          </div>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => printWindow.print(), 500);
+    }
+
+    // الأحداث
     $('calcBtn').onclick = calculate;
     $('resetBtn').onclick = reset;
-    $('cameraCount').oninput = () => calcInstall(parseFloat($('cameraCount').value)||0);
+    $('printBtn').onclick = () => {
+      calculate();
+      if (parseFloat($('totalValue').textContent) > 0) {
+        printInvoice();
+      } else {
+        alert("Veuillez d'abord calculer un total.");
+      }
+    };
+    $('cameraCount').oninput = () => { if (!customInstallEnabled) calcInstallAuto(parseFloat($('cameraCount').value)||0); calculate(); };
     document.querySelectorAll('input,select').forEach(el=>el.onchange=calculate);
+
+    // Modal
+    const modal = $('installModal');
+    const toggleBtn = $('toggleInstallBtn');
+    toggleBtn.onclick = () => modal.style.display = 'flex';
+    $('cancelInstall').onclick = () => modal.style.display = 'none';
+    $('confirmInstall').onclick = () => {
+      const input = parseFloat($('customInstallPrice').value) || 0;
+      customInstallPrice = input;
+      customInstallEnabled = true;
+      $('installationPrice').textContent = fmt(input);
+      toggleBtn.textContent = 'Installation personnalisée activée';
+      toggleBtn.classList.add('active');
+      modal.style.display = 'none';
+      calculate();
+    };
+    window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
   </script>
 </body>
 </html>
